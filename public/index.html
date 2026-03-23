@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Daniel's Cafe ☕</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  overflow: hidden; 
+  background: #2c1810; 
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  touch-action: none;
+  user-select: none;
+}
+canvas { display: block; }
+
+/* Screens */
+.screen { 
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 100; transition: opacity 0.3s;
+}
+.screen.hidden { opacity: 0; pointer-events: none; }
+
+#startScreen {
+  background: linear-gradient(135deg, #3c1e0e 0%, #5a2d0c 50%, #2c1810 100%);
+}
+#gameOverScreen {
+  background: rgba(44, 24, 16, 0.92);
+}
+
+.title {
+  font-size: 3em;
+  color: #f4d03f;
+  text-shadow: 3px 3px 0 #2c1810, 0 0 20px rgba(244,208,63,0.3);
+  margin-bottom: 10px;
+  text-align: center;
+}
+.subtitle {
+  font-size: 1.2em;
+  color: #d4a574;
+  margin-bottom: 30px;
+  text-align: center;
+  padding: 0 20px;
+}
+.face-preview {
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #f4d03f;
+  margin-bottom: 20px;
+  animation: bob 2s ease-in-out infinite;
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.btn {
+  padding: 16px 48px;
+  font-size: 1.4em;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn:active { transform: scale(0.95); }
+.btn-start {
+  background: linear-gradient(135deg, #f4d03f, #e6b800);
+  color: #2c1810;
+  box-shadow: 0 4px 15px rgba(244,208,63,0.4);
+}
+.btn-retry {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  box-shadow: 0 4px 15px rgba(231,76,60,0.4);
+}
+.go-score {
+  font-size: 4em;
+  color: #f4d03f;
+  margin: 10px 0;
+}
+.go-label {
+  font-size: 1.1em;
+  color: #d4a574;
+  margin-bottom: 20px;
+}
+.go-msg {
+  font-size: 1.3em;
+  color: #e74c3c;
+  margin-bottom: 30px;
+  text-align: center;
+  padding: 0 20px;
+}
+
+/* HUD */
+#hud {
+  position: fixed; top: 0; left: 0; width: 100%; 
+  padding: 10px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 50;
+  background: linear-gradient(180deg, rgba(44,24,16,0.85) 0%, transparent 100%);
+}
+.hud-item {
+  color: #f4d03f;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #000;
+}
+.lives { color: #e74c3c; }
+
+/* Order popup */
+.order-popup {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: #fff8ee;
+  border-radius: 20px;
+  padding: 30px;
+  z-index: 200;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 90vw;
+}
+.order-popup.show { transform: translate(-50%, -50%) scale(1); }
+.order-popup .face-small {
+  width: 70px; height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #f4d03f;
+  margin-bottom: 10px;
+}
+.order-text {
+  font-size: 1.1em;
+  color: #2c1810;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+.order-items {
+  font-size: 1em;
+  color: #5a2d0c;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+.timer-bar {
+  width: 100%;
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.timer-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2ecc71, #f4d03f, #e74c3c);
+  border-radius: 4px;
+  transition: width 0.1s linear;
+}
+
+/* Ingredient area */
+#ingredientArea {
+  position: fixed;
+  bottom: 0; left: 0; width: 100%;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+  padding: 12px 8px 20px;
+  background: linear-gradient(0deg, rgba(44,24,16,0.95) 0%, rgba(44,24,16,0.7) 70%, transparent 100%);
+  z-index: 50;
+}
+.ingredient-btn {
+  width: 64px; height: 64px;
+  border-radius: 16px;
+  border: 2px solid #5a2d0c;
+  background: #3c2415;
+  font-size: 2em;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.1s, border-color 0.1s, background 0.1s;
+}
+.ingredient-btn:active {
+  transform: scale(0.9);
+  background: #5a3d2a;
+}
+.ingredient-btn.correct {
+  border-color: #2ecc71;
+  background: #1a4d2e;
+  animation: pop 0.3s;
+}
+.ingredient-btn.wrong {
+  border-color: #e74c3c;
+  background: #4d1a1a;
+  animation: shake 0.3s;
+}
+@keyframes pop {
+  50% { transform: scale(1.2); }
+}
+@keyframes shake {
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Served area */
+.served-area {
+  position: fixed;
+  top: 50px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px;
+  z-index: 45;
+}
+.served-item {
+  font-size: 1.6em;
+  animation: floatUp 0.5s ease-out;
+}
+@keyframes floatUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Rage quit */
+.rage-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 150;
+  background: rgba(231, 76, 60, 0.3);
+  animation: rageFade 1.5s forwards;
+  pointer-events: none;
+}
+@keyframes rageFade {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.rage-face {
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid #e74c3c;
+  animation: rageShake 0.1s infinite alternate;
+}
+@keyframes rageShake {
+  from { transform: rotate(-5deg) scale(1.1); }
+  to { transform: rotate(5deg) scale(1.1); }
+}
+.rage-text {
+  position: absolute;
+  bottom: 30%;
+  color: #e74c3c;
+  font-size: 2em;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px #000;
+}
+
+/* Queue faces */
+#queue {
+  position: fixed;
+  right: 10px;
+  top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 45;
+}
+.queue-face {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f4d03f;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+.queue-face:first-child { opacity: 1; width: 50px; height: 50px; }
+
+/* Combo */
+.combo-text {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2em;
+  color: #f4d03f;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px #000;
+  z-index: 60;
+  animation: comboAnim 1s forwards;
+  pointer-events: none;
+}
+@keyframes comboAnim {
+  0% { opacity: 1; transform: translateX(-50%) scale(0.5); }
+  50% { transform: translateX(-50%) scale(1.3); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-50px) scale(1); }
+}
+</style>
+</head>
+<body>
+
+<!-- Start Screen -->
+<div id="startScreen" class="screen">
+  <img src="daniel.jpg" class="face-preview" alt="Daniel">
+  <div class="title">☕ Daniel's Cafe</div>
+  <div class="subtitle">Customers are lining up... and they ALL look like Daniel.<br>Make their insane coffee orders before they rage-quit!</div>
+  <button class="btn btn-start" onclick="startGame()">OPEN THE CAFE</button>
+</div>
+
+<!-- Game Over Screen -->
+<div id="gameOverScreen" class="screen hidden">
+  <img src="daniel.jpg" class="face-preview" alt="Daniel">
+  <div class="title">CAFE CLOSED</div>
+  <div class="go-label">Customers served</div>
+  <div class="go-score" id="finalScore">0</div>
+  <div class="go-msg" id="finalMsg"></div>
+  <button class="btn btn-retry" onclick="startGame()">REOPEN ☕</button>
+</div>
+
+<!-- HUD -->
+<div id="hud" style="display:none;">
+  <div class="hud-item">☕ <span id="scoreDisplay">0</span></div>
+  <div class="hud-item">🔥 <span id="levelDisplay">1</span></div>
+  <div class="hud-item lives">❤️ <span id="livesDisplay">3</span></div>
+</div>
+
+<!-- Queue -->
+<div id="queue" style="display:none;"></div>
+
+<!-- Served items display -->
+<div class="served-area" id="servedArea"></div>
+
+<!-- Order popup -->
+<div class="order-popup" id="orderPopup">
+  <img src="daniel.jpg" class="face-small" alt="Daniel">
+  <div class="order-text" id="orderTitle"></div>
+  <div class="order-items" id="orderItems"></div>
+  <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+</div>
+
+<!-- Ingredient buttons -->
+<div id="ingredientArea" style="display:none;"></div>
+
+<script>
+// === GAME CONFIG ===
+const INGREDIENTS = [
+  { emoji: '☕', name: 'Espresso' },
+  { emoji: '🥛', name: 'Milk' },
+  { emoji: '🧊', name: 'Ice' },
+  { emoji: '🍫', name: 'Chocolate' },
+  { emoji: '🍦', name: 'Whipped Cream' },
+  { emoji: '🍯', name: 'Honey' },
+  { emoji: '🫘', name: 'Vanilla' },
+  { emoji: '🍵', name: 'Matcha' },
+  { emoji: '🧈', name: 'Butter' },
+  { emoji: '🌶️', name: 'Chili' },
+  { emoji: '🥜', name: 'Hazelnut' },
+  { emoji: '🍋', name: 'Lemon' },
+  { emoji: '🫐', name: 'Blueberry' },
+  { emoji: '🍌', name: 'Banana' },
+  { emoji: '🧂', name: 'Salt' },
+  { emoji: '🥥', name: 'Coconut' },
+];
+
+const ORDER_NAMES = [
+  "Double Espresso Madness", "Iced Choco Chaos", "The Gut Buster",
+  "Vanilla Dream Disaster", "Matcha Mayhem", "Honey Trap Latte",
+  "The Daniel Special", "Butter Coffee Blunder", "Chili Mocha Nightmare",
+  "Triple Shot Tornado", "Coconut Catastrophe", "The Regret-accino",
+  "Blueberry Brain Freeze", "Salt Caramel Scandal", "Banana Split Shot",
+  "Lemon Drop Shock", "The Kitchen Sink", "Hazelnut Havoc",
+  "Ice Ice Baby Latte", "The Frankenstein Brew"
+];
+
+const RAGE_QUOTES = [
+  "I'M NEVER COMING BACK!", "THIS IS UNACCEPTABLE!", 
+  "I WANT TO SEE THE MANAGER!", "YOU CALL THIS A CAFE?!",
+  "MY GRANDMOTHER MAKES BETTER COFFEE!", "I'M LEAVING A 1-STAR REVIEW!",
+  "DO YOU EVEN KNOW WHAT COFFEE IS?!", "THIS IS A DISGRACE!"
+];
+
+const GAME_OVER_MSGS = [
+  "Daniel's army has defeated you...",
+  "The cafe is in shambles!",
+  "Every Daniel left angry!",
+  "Coffee beans everywhere...",
+  "You tried your best (not really).",
+];
+
+let score = 0;
+let lives = 3;
+let level = 1;
+let combo = 0;
+let gameActive = false;
+let currentOrder = null;
+let timerInterval = null;
+let timeLeft = 0;
+let maxTime = 0;
+let served = [];
+let queueSize = 1;
+
+function startGame() {
+  score = 0; lives = 3; level = 1; combo = 0; queueSize = 1;
+  gameActive = true;
+  served = [];
+  
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('gameOverScreen').classList.add('hidden');
+  document.getElementById('hud').style.display = 'flex';
+  document.getElementById('ingredientArea').style.display = 'flex';
+  document.getElementById('queue').style.display = 'flex';
+  updateHUD();
+  buildIngredients();
+  nextOrder();
+}
+
+function buildIngredients() {
+  const area = document.getElementById('ingredientArea');
+  area.innerHTML = '';
+  // Show more ingredients as level increases
+  const count = Math.min(8 + Math.floor(level / 2), INGREDIENTS.length);
+  const shuffled = [...INGREDIENTS].sort(() => Math.random() - 0.5).slice(0, count);
+  // Make sure current order ingredients are included
+  if (currentOrder) {
+    currentOrder.ingredients.forEach(ing => {
+      if (!shuffled.find(s => s.emoji === ing.emoji)) {
+        shuffled[Math.floor(Math.random() * shuffled.length)] = ing;
+      }
+    });
+  }
+  shuffled.forEach(ing => {
+    const btn = document.createElement('button');
+    btn.className = 'ingredient-btn';
+    btn.textContent = ing.emoji;
+    btn.title = ing.name;
+    btn.onclick = () => tapIngredient(ing, btn);
+    area.appendChild(btn);
+  });
+}
+
+function generateOrder() {
+  const numIngredients = Math.min(2 + Math.floor(level / 3), 6);
+  const shuffled = [...INGREDIENTS].sort(() => Math.random() - 0.5);
+  const orderIngs = shuffled.slice(0, numIngredients);
+  const name = ORDER_NAMES[Math.floor(Math.random() * ORDER_NAMES.length)];
+  // Time decreases with level
+  const time = Math.max(4000, 12000 - level * 600);
+  return { name, ingredients: orderIngs, remaining: [...orderIngs], time };
+}
+
+function nextOrder() {
+  if (!gameActive) return;
+  
+  currentOrder = generateOrder();
+  served = [];
+  document.getElementById('servedArea').innerHTML = '';
+  
+  // Update queue display
+  updateQueue();
+  
+  // Show order
+  const popup = document.getElementById('orderPopup');
+  document.getElementById('orderTitle').textContent = currentOrder.name;
+  document.getElementById('orderItems').innerHTML = currentOrder.ingredients
+    .map(i => `${i.emoji} ${i.name}`).join('<br>');
+  popup.classList.add('show');
+  
+  // Rebuild ingredients to ensure order items are available
+  buildIngredients();
+  
+  // Start timer
+  timeLeft = currentOrder.time;
+  maxTime = currentOrder.time;
+  updateTimer();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft -= 100;
+    updateTimer();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      rageQuit();
+    }
+  }, 100);
+}
+
+function updateTimer() {
+  const pct = Math.max(0, (timeLeft / maxTime) * 100);
+  document.getElementById('timerFill').style.width = pct + '%';
+}
+
+function updateQueue() {
+  const q = document.getElementById('queue');
+  queueSize = Math.min(1 + Math.floor(score / 3), 5);
+  q.innerHTML = '';
+  for (let i = 0; i < queueSize; i++) {
+    const img = document.createElement('img');
+    img.src = 'daniel.jpg';
+    img.className = 'queue-face';
+    img.alt = 'Waiting Daniel';
+    q.appendChild(img);
+  }
+}
+
+function tapIngredient(ing, btn) {
+  if (!gameActive || !currentOrder) return;
+  
+  const idx = currentOrder.remaining.findIndex(r => r.emoji === ing.emoji);
+  if (idx !== -1) {
+    // Correct!
+    currentOrder.remaining.splice(idx, 1);
+    btn.classList.add('correct');
+    setTimeout(() => btn.classList.remove('correct'), 300);
+    
+    // Add to served display
+    const s = document.createElement('span');
+    s.className = 'served-item';
+    s.textContent = ing.emoji;
+    document.getElementById('servedArea').appendChild(s);
+    
+    if (currentOrder.remaining.length === 0) {
+      orderComplete();
+    }
+  } else {
+    // Wrong!
+    btn.classList.add('wrong');
+    setTimeout(() => btn.classList.remove('wrong'), 300);
+    timeLeft -= 1500; // Penalty
+    combo = 0;
+  }
+}
+
+function orderComplete() {
+  clearInterval(timerInterval);
+  score++;
+  combo++;
+  
+  // Level up every 4 orders
+  level = 1 + Math.floor(score / 4);
+  
+  // Combo display
+  if (combo >= 3) {
+    showCombo(combo);
+  }
+  
+  const popup = document.getElementById('orderPopup');
+  document.getElementById('orderTitle').textContent = '✅ ORDER SERVED!';
+  document.getElementById('orderItems').textContent = combo >= 3 ? `🔥 ${combo}x COMBO!` : 'Nice one!';
+  
+  updateHUD();
+  
+  setTimeout(() => {
+    popup.classList.remove('show');
+    setTimeout(() => nextOrder(), 400);
+  }, 800);
+}
+
+function rageQuit() {
+  if (!gameActive) return;
+  
+  combo = 0;
+  lives--;
+  updateHUD();
+  
+  // Hide order popup
+  document.getElementById('orderPopup').classList.remove('show');
+  
+  // Show rage animation
+  const overlay = document.createElement('div');
+  overlay.className = 'rage-overlay';
+  overlay.innerHTML = `
+    <img src="daniel.jpg" class="rage-face" alt="Angry Daniel">
+    <div class="rage-text">${RAGE_QUOTES[Math.floor(Math.random() * RAGE_QUOTES.length)]}</div>
+  `;
+  document.body.appendChild(overlay);
+  setTimeout(() => overlay.remove(), 1500);
+  
+  if (lives <= 0) {
+    setTimeout(() => gameOver(), 1600);
+  } else {
+    setTimeout(() => nextOrder(), 1600);
+  }
+}
+
+function gameOver() {
+  gameActive = false;
+  clearInterval(timerInterval);
+  
+  document.getElementById('hud').style.display = 'none';
+  document.getElementById('ingredientArea').style.display = 'none';
+  document.getElementById('queue').style.display = 'none';
+  document.getElementById('orderPopup').classList.remove('show');
+  document.getElementById('servedArea').innerHTML = '';
+  
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('finalMsg').textContent = 
+    GAME_OVER_MSGS[Math.floor(Math.random() * GAME_OVER_MSGS.length)];
+  document.getElementById('gameOverScreen').classList.remove('hidden');
+}
+
+function updateHUD() {
+  document.getElementById('scoreDisplay').textContent = score;
+  document.getElementById('levelDisplay').textContent = level;
+  document.getElementById('livesDisplay').textContent = lives;
+}
+
+function showCombo(n) {
+  const el = document.createElement('div');
+  el.className = 'combo-text';
+  el.textContent = `🔥 ${n}x COMBO!`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1000);
+}
+</script>
+</body>
+</html>
