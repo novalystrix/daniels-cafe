@@ -8,23 +8,26 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{overflow:hidden;background:#1a0e08;font-family:'Segoe UI',system-ui,sans-serif;touch-action:none;user-select:none;height:100vh;height:100dvh}
 
-/* SCREENS */
 .screen{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;transition:opacity .4s}
 .screen.hidden{opacity:0;pointer-events:none}
 #startScreen{background:radial-gradient(ellipse at center,#3c1e0e 0%,#1a0e08 70%)}
+#selectScreen{background:radial-gradient(ellipse at center,#3c1e0e 0%,#1a0e08 70%)}
+#resultScreen{background:rgba(26,14,8,.95)}
+#finalScreen{background:rgba(26,14,8,.95)}
+
 .title{font-size:2.4em;color:#f4d03f;text-shadow:2px 2px 0 #1a0e08;margin-bottom:5px;text-align:center}
 .subtitle{font-size:.95em;color:#c4956a;margin-bottom:20px;text-align:center;padding:0 30px;line-height:1.5}
 .face-preview{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #f4d03f;margin-bottom:15px;animation:bob 2.5s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.btn{padding:14px 40px;font-size:1.2em;border:none;border-radius:50px;cursor:pointer;font-weight:bold;transition:transform .15s;margin:5px}
+
+.btn{padding:14px 40px;font-size:1.15em;border:none;border-radius:50px;cursor:pointer;font-weight:bold;transition:transform .15s;margin:5px}
 .btn:active{transform:scale(.95)}
 .btn-gold{background:linear-gradient(135deg,#f4d03f,#d4a017);color:#1a0e08;box-shadow:0 4px 20px rgba(244,208,63,.3)}
 .btn-outline{background:transparent;border:2px solid #c4956a;color:#c4956a}
-.btn-red{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff}
 .btn-sm{padding:10px 24px;font-size:1em}
+.btn-green{background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;box-shadow:0 4px 15px rgba(46,204,113,.3)}
 
-/* PATTERN SELECT */
-#selectScreen{background:radial-gradient(ellipse at center,#3c1e0e 0%,#1a0e08 70%)}
+/* Pattern Select */
 .pattern-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 20px;max-width:400px;width:100%;margin-bottom:20px}
 .pattern-card{background:rgba(60,30,14,.8);border:2px solid #3c2415;border-radius:16px;padding:14px;text-align:center;cursor:pointer;transition:all .2s}
 .pattern-card:active{transform:scale(.96)}
@@ -35,44 +38,39 @@ body{overflow:hidden;background:#1a0e08;font-family:'Segoe UI',system-ui,sans-se
 .pattern-card .p-stars{color:#f4d03f;font-size:.8em;margin-top:4px}
 .pattern-card.mastered{border-color:#2ecc71}
 
-/* GAME */
-#gameArea{position:relative;width:100vw;height:100vh;height:100dvh;display:none;overflow:hidden}
-#cupCanvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);cursor:crosshair;z-index:5}
-#guideCanvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:10}
+/* Game */
+#gameArea{position:relative;width:100vw;height:100vh;height:100dvh;display:none;overflow:hidden;background:#1a0e08}
+#cupCanvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);cursor:crosshair;z-index:5;border-radius:50%}
+#guideCanvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);pointer-events:none;z-index:10;border-radius:50%}
 
 /* HUD */
 #hud{position:fixed;top:0;left:0;width:100%;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;z-index:50;background:linear-gradient(180deg,rgba(26,14,8,.92)0%,transparent 100%)}
 .hud-item{color:#f4d03f;font-size:.9em;font-weight:bold;text-shadow:1px 1px 2px #000}
-#timerBar{position:fixed;top:42px;left:0;width:100%;height:4px;background:rgba(255,255,255,.08);z-index:50}
+#timerBar{position:fixed;top:42px;left:0;width:100%;height:5px;background:rgba(255,255,255,.08);z-index:50}
 #timerFill{height:100%;background:linear-gradient(90deg,#2ecc71,#f4d03f,#e74c3c);width:100%;transition:width .1s linear}
 
-/* STEP PANEL */
-#stepPanel{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:50;background:rgba(26,14,8,.92);border:1px solid #3c2415;border-radius:16px;padding:12px 18px;text-align:center;backdrop-filter:blur(10px);max-width:90vw;width:320px;transition:all .3s}
-#stepPanel.minimized{bottom:75px;padding:6px 14px;border-radius:20px;width:auto}
-.step-title{color:#f4d03f;font-size:.95em;font-weight:bold;margin-bottom:4px}
-.step-desc{color:#ddc;font-size:.85em;line-height:1.4}
-.step-progress{display:flex;gap:6px;justify-content:center;margin-top:8px}
+/* Step Panel */
+#stepPanel{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:50;background:rgba(26,14,8,.93);border:1px solid #3c2415;border-radius:16px;padding:14px 20px;text-align:center;backdrop-filter:blur(10px);max-width:92vw;width:340px}
+.step-title{color:#f4d03f;font-size:1.05em;font-weight:bold;margin-bottom:6px}
+.step-desc{color:#ddc;font-size:.88em;line-height:1.4}
+.step-sub{color:#c4956a;font-size:.78em;margin-top:5px;font-style:italic}
+.step-progress{display:flex;gap:6px;justify-content:center;margin-top:10px}
 .step-dot{width:10px;height:10px;border-radius:50%;background:#3c2415;border:1px solid #5a3d2a;transition:all .3s}
 .step-dot.done{background:#2ecc71;border-color:#2ecc71}
-.step-dot.active{background:#f4d03f;border-color:#f4d03f;transform:scale(1.2)}
-.step-sub{color:#c4956a;font-size:.75em;margin-top:4px;font-style:italic}
+.step-dot.active{background:#f4d03f;border-color:#f4d03f;transform:scale(1.3)}
+#nextStepBtn{margin-top:10px;padding:8px 28px;font-size:.9em;border:none;border-radius:20px;background:#2ecc71;color:#fff;font-weight:bold;cursor:pointer;transition:transform .15s}
+#nextStepBtn:active{transform:scale(.95)}
 
-/* TOOLBAR */
-#toolbar{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:50;background:rgba(26,14,8,.88);padding:8px 14px;border-radius:30px;border:1px solid #3c2415;backdrop-filter:blur(10px)}
-.tool-btn{width:44px;height:44px;border-radius:50%;border:2px solid #5a3d2a;background:#2c1810;font-size:1.3em;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;position:relative}
-.tool-btn.active{border-color:#f4d03f;background:#3c2415;box-shadow:0 0 10px rgba(244,208,63,.3)}
+/* Toolbar */
+#toolbar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:50;background:rgba(26,14,8,.88);padding:8px 16px;border-radius:30px;border:1px solid #3c2415;backdrop-filter:blur(10px)}
+.tool-btn{width:48px;height:48px;border-radius:50%;border:2px solid #5a3d2a;background:#2c1810;font-size:1.4em;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;position:relative}
+.tool-btn.active{border-color:#f4d03f;background:#3c2415;box-shadow:0 0 12px rgba(244,208,63,.3)}
 .tool-btn:active{transform:scale(.9)}
-.tool-btn .tool-label{position:absolute;bottom:-15px;font-size:.55em;color:#c4956a;white-space:nowrap}
+.tool-btn .tl{position:absolute;bottom:-14px;font-size:.55em;color:#c4956a;white-space:nowrap}
 .tool-btn.recommended{animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 rgba(244,208,63,0)}50%{box-shadow:0 0 15px rgba(244,208,63,.5)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 rgba(244,208,63,0)}50%{box-shadow:0 0 18px rgba(244,208,63,.5)}}
 
-/* ANIMATED GUIDE ARROW */
-#guideArrow{position:absolute;z-index:20;pointer-events:none;width:24px;height:24px;transition:all .05s linear}
-#guideArrow::after{content:'';display:block;width:20px;height:20px;border-radius:50%;background:rgba(244,208,63,.6);box-shadow:0 0 12px rgba(244,208,63,.4);animation:arrowPulse 1s infinite}
-@keyframes arrowPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.3);opacity:1}}
-
-/* RESULT */
-#resultScreen{background:rgba(26,14,8,.95)}
+/* Results */
 .result-score{font-size:4.5em;color:#f4d03f;font-weight:bold;text-shadow:0 0 30px rgba(244,208,63,.3)}
 .result-grade{font-size:1.6em;margin:5px 0 8px}
 .result-breakdown{color:#c4956a;font-size:.9em;line-height:1.8;margin-bottom:15px}
@@ -81,19 +79,18 @@ body{overflow:hidden;background:#1a0e08;font-family:'Segoe UI',system-ui,sans-se
 .result-tip{background:rgba(46,204,113,.15);border:1px solid rgba(46,204,113,.3);border-radius:10px;padding:10px 16px;color:#aee8c0;font-size:.85em;margin:8px 20px 15px;line-height:1.4;text-align:left}
 .result-tip strong{color:#2ecc71}
 
-/* COMPARE VIEW */
-.compare-row{display:flex;gap:10px;justify-content:center;margin:10px 0}
+.compare-row{display:flex;gap:12px;justify-content:center;margin:10px 0}
 .compare-item{text-align:center}
 .compare-item canvas{border-radius:50%;border:2px solid #3c2415}
 .compare-label{color:#c4956a;font-size:.75em;margin-top:4px}
 
-/* DANIEL POPUP */
+/* Daniel popup */
 .daniel-popup{position:fixed;z-index:200;animation:danielPop 2.5s forwards;pointer-events:none}
 .daniel-popup img{width:70px;height:70px;border-radius:50%;object-fit:cover;border:3px solid #e74c3c}
 .daniel-popup .bubble{position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);background:#fff;color:#1a0e08;padding:4px 10px;border-radius:10px;font-size:.7em;font-weight:bold;white-space:nowrap;box-shadow:0 2px 10px rgba(0,0,0,.3)}
 @keyframes danielPop{0%{opacity:0;transform:scale(.3)rotate(-20deg)}15%{opacity:1;transform:scale(1.1)rotate(5deg)}25%{transform:scale(1)rotate(0)}80%{opacity:1}100%{opacity:0;transform:translateY(-40px)scale(.5)}}
 
-/* LEVEL SPLASH */
+/* Splash */
 #levelSplash{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:300;background:rgba(26,14,8,.9);opacity:0;pointer-events:none;transition:opacity .4s}
 #levelSplash.show{opacity:1}
 .splash-icon{font-size:4em;margin-bottom:10px}
@@ -103,7 +100,6 @@ body{overflow:hidden;background:#1a0e08;font-family:'Segoe UI',system-ui,sans-se
 </head>
 <body>
 
-<!-- START -->
 <div id="startScreen" class="screen">
   <img src="daniel.jpg" class="face-preview" alt="Daniel">
   <div class="title">☕ Daniel's Cafe</div>
@@ -111,7 +107,6 @@ body{overflow:hidden;background:#1a0e08;font-family:'Segoe UI',system-ui,sans-se
   <button class="btn btn-gold" onclick="showSelect()">START LEARNING</button>
 </div>
 
-<!-- PATTERN SELECT -->
 <div id="selectScreen" class="screen hidden">
   <div class="title" style="font-size:1.6em;margin-bottom:3px">Choose Your Art</div>
   <div class="subtitle" style="margin-bottom:15px">Master patterns to unlock harder ones</div>
@@ -119,7 +114,6 @@ body{overflow:hidden;background:#1a0e08;font-family:'Segoe UI',system-ui,sans-se
   <button class="btn btn-outline btn-sm" onclick="showStart()">← Back</button>
 </div>
 
-<!-- GAME -->
 <div id="gameArea">
   <div id="hud">
     <div class="hud-item" id="hudLeft">☕ Heart</div>
@@ -129,12 +123,12 @@ body{overflow:hidden;background:#1a0e08;font-family:'Segoe UI',system-ui,sans-se
   <div id="timerBar"><div id="timerFill"></div></div>
   <canvas id="cupCanvas"></canvas>
   <canvas id="guideCanvas"></canvas>
-  <div id="guideArrow" style="display:none"></div>
   <div id="stepPanel">
     <div class="step-title" id="stepTitle">Step 1</div>
     <div class="step-desc" id="stepDesc"></div>
     <div class="step-sub" id="stepSub"></div>
     <div class="step-progress" id="stepDots"></div>
+    <button id="nextStepBtn" onclick="userAdvanceStep()">Next Step →</button>
   </div>
   <div id="toolbar"></div>
   <div id="levelSplash">
@@ -144,7 +138,6 @@ body{overflow:hidden;background:#1a0e08;font-family:'Segoe UI',system-ui,sans-se
   </div>
 </div>
 
-<!-- RESULT -->
 <div id="resultScreen" class="screen hidden">
   <div class="result-daniel"><img src="daniel.jpg" alt="Daniel"></div>
   <div class="result-quote" id="resultQuote"></div>
@@ -160,15 +153,15 @@ body{overflow:hidden;background:#1a0e08;font-family:'Segoe UI',system-ui,sans-se
 </div>
 
 <script>
-// ====== PATTERNS ======
+// ===== PATTERNS =====
 const PATTERNS = [
   {
     id:'heart', name:'Heart', icon:'❤️', difficulty:1, unlockScore:0,
     desc:'The foundation of latte art',
     steps:[
-      {title:'Center Pour',desc:'Pour milk into the center of the cup in a steady stream.',sub:'Hold steady — build a white base in the middle.',tool:'pour',zone:{cx:.5,cy:.45,r:.15},duration:6000},
-      {title:'Push Forward',desc:'Slowly push the pour toward the top of the cup.',sub:'Move smoothly upward while pouring.',tool:'pour',zone:{cx:.5,cy:.3,r:.18},duration:5000},
-      {title:'Strike Through',desc:'Quick thin line from top to bottom through the center.',sub:'One confident stroke down the middle!',tool:'thin',zone:{cx:.5,cy:.5,r:.08,isLine:true,from:{x:.5,y:.2},to:{x:.5,y:.7}},duration:4000}
+      {title:'Center Pour',desc:'Pour milk into the center of the cup. Build a white pool.',sub:'Hold steady — fill the middle area with milk.',tool:'pour',duration:20000},
+      {title:'Push Forward',desc:'Keep pouring while slowly moving upward toward the top.',sub:'Push the milk forward to form the top of the heart.',tool:'pour',duration:18000},
+      {title:'Strike Through',desc:'Switch to Thin tool — draw a quick line from top to bottom.',sub:'One confident stroke through the center pulls it into a heart!',tool:'thin',duration:15000}
     ],
     buildGuide:(ctx,cx,cy,r)=>{
       const s=r*.7;
@@ -190,27 +183,26 @@ const PATTERNS = [
         const y=-(13*Math.cos(a)-5*Math.cos(2*a)-2*Math.cos(3*a)-Math.cos(4*a));
         pts.push({x:cx+x*s/17,y:cy+y*s/17-s*.1});
       }
-      // Fill interior points
-      for(let fy=-s;fy<s;fy+=4){for(let fx=-s;fx<s;fx+=4){
-        const px=cx+fx,py=cy+fy-s*.1;
-        const nx=fx*17/s,ny=-(fy)*17/s;
-        const t=Math.atan2(nx,ny<0?ny+1:ny)/(Math.PI*2);
-        const heartX=16*Math.pow(Math.sin(t*Math.PI*2),3);
-        const heartR=Math.sqrt(nx*nx+ny*ny);
-        const heartEdge=Math.sqrt(heartX*heartX+(-(13*Math.cos(t*Math.PI*2)-5*Math.cos(2*t*Math.PI*2)-2*Math.cos(3*t*Math.PI*2)-Math.cos(4*t*Math.PI*2)))**2);
-        if(heartR<heartEdge*.85)pts.push({x:px,y:py});
+      // Fill
+      for(let gy=-1;gy<=1;gy+=.05){for(let gx=-1;gx<=1;gx+=.05){
+        const a=Math.atan2(gx,gy)/(Math.PI*2);
+        const hx=16*Math.pow(Math.sin(a*Math.PI*2),3)/17;
+        const hy=-(13*Math.cos(a*Math.PI*2)-5*Math.cos(2*a*Math.PI*2)-2*Math.cos(3*a*Math.PI*2)-Math.cos(4*a*Math.PI*2))/17;
+        const hr=Math.sqrt(hx*hx+hy*hy);
+        const pr=Math.sqrt(gx*gx+gy*gy);
+        if(pr<hr*.9)pts.push({x:cx+gx*s,y:cy+gy*s-s*.1});
       }}
       return pts;
     }
   },
   {
-    id:'tulip', name:'Tulip', icon:'🌷', difficulty:2, unlockScore:40,
+    id:'tulip', name:'Tulip', icon:'🌷', difficulty:2, unlockScore:35,
     desc:'Three stacked pours with a pull-through',
     steps:[
-      {title:'Bottom Circle',desc:'Pour a wide circle at the bottom of the cup.',sub:'Make it the biggest of the three.',tool:'pour',zone:{cx:.5,cy:.62,r:.18},duration:5000},
-      {title:'Middle Circle',desc:'Pour a medium circle just above the first.',sub:'Slightly smaller — let it push into the bottom one.',tool:'pour',zone:{cx:.5,cy:.45,r:.15},duration:5000},
-      {title:'Top Circle',desc:'Pour a small circle at the top.',sub:'The smallest of the three.',tool:'pour',zone:{cx:.5,cy:.3,r:.12},duration:4000},
-      {title:'Pull Through',desc:'Drag a thin line from top through all three circles.',sub:'One clean stroke — this creates the tulip shape!',tool:'thin',zone:{cx:.5,cy:.5,r:.06,isLine:true,from:{x:.5,y:.2},to:{x:.5,y:.75}},duration:4000}
+      {title:'Bottom Circle',desc:'Pour a wide circle in the lower part of the cup.',sub:'This is the biggest blob — make it round and full.',tool:'pour',duration:18000},
+      {title:'Middle Circle',desc:'Pour a medium circle just above the first.',sub:'Let it push slightly into the bottom one.',tool:'pour',duration:16000},
+      {title:'Top Circle',desc:'Pour a small circle at the top.',sub:'The smallest of the three.',tool:'pour',duration:14000},
+      {title:'Pull Through',desc:'Switch to Thin — drag a line from top through all three.',sub:'This creates the tulip stem!',tool:'thin',duration:14000}
     ],
     buildGuide:(ctx,cx,cy,r)=>{
       const s=r*.55;
@@ -222,24 +214,22 @@ const PATTERNS = [
     getTargetPixels:(cx,cy,r)=>{
       const pts=[];const s=r*.55;
       [{y:.7,rx:.7,ry:.45},{y:0,rx:.55,ry:.38},{y:-.6,rx:.38,ry:.3}].forEach(c=>{
-        for(let a=0;a<Math.PI*2;a+=.08){
-          for(let d=0;d<=1;d+=.15){
-            pts.push({x:cx+Math.cos(a)*s*c.rx*d,y:cy+s*c.y+Math.sin(a)*s*c.ry*d});
-          }
-        }
+        for(let a=0;a<Math.PI*2;a+=.06){for(let d=0;d<=1;d+=.12){
+          pts.push({x:cx+Math.cos(a)*s*c.rx*d,y:cy+s*c.y+Math.sin(a)*s*c.ry*d});
+        }}
       });
       for(let t=0;t<=1;t+=.02)pts.push({x:cx,y:cy-s*.9+t*s*2.05});
       return pts;
     }
   },
   {
-    id:'rosetta', name:'Rosetta', icon:'🌿', difficulty:2, unlockScore:40,
+    id:'rosetta', name:'Rosetta', icon:'🌿', difficulty:2, unlockScore:35,
     desc:'The classic fern — wiggle while pulling back',
     steps:[
-      {title:'Start Wide',desc:'Begin pouring at the top of the cup with a wide stream.',sub:'Create a base — pour and hold.',tool:'pour',zone:{cx:.5,cy:.3,r:.18},duration:4000},
-      {title:'Wiggle Down',desc:'Shake side to side while slowly moving down.',sub:'Even, rhythmic wiggles — this creates the leaves!',tool:'shake',zone:{cx:.5,cy:.5,r:.25},duration:8000},
-      {title:'Thin Tail',desc:'End with a thin tail at the bottom.',sub:'Narrow your pour as you reach the bottom.',tool:'thin',zone:{cx:.5,cy:.72,r:.1},duration:3000},
-      {title:'Strike Through',desc:'Pull a thin line from bottom to top through the center.',sub:'This defines the stem and separates the leaves!',tool:'thin',zone:{cx:.5,cy:.5,r:.06,isLine:true,from:{x:.5,y:.78},to:{x:.5,y:.22}},duration:4000}
+      {title:'Start at Top',desc:'Pour a base of milk in the upper area of the cup.',sub:'Create a starting pool of milk at the top.',tool:'pour',duration:16000},
+      {title:'Wiggle Down',desc:'Use the Wiggle tool — move side to side while going down.',sub:'Even rhythmic wiggles create the leaf pattern!',tool:'shake',duration:22000},
+      {title:'Thin Tail',desc:'Use Thin to taper off at the bottom of the cup.',sub:'Narrow the pattern as you reach the bottom.',tool:'thin',duration:12000},
+      {title:'Strike Through',desc:'Draw a thin line from bottom to top through the center.',sub:'This defines the stem — one clean stroke!',tool:'thin',duration:14000}
     ],
     buildGuide:(ctx,cx,cy,r)=>{
       const s=r*.65;
@@ -256,23 +246,23 @@ const PATTERNS = [
     },
     getTargetPixels:(cx,cy,r)=>{
       const pts=[];const s=r*.65;
-      for(let t=0;t<=1;t+=.01){
+      for(let t=0;t<=1;t+=.008){
         const y2=cy+s-t*s*2;const w=Math.sin(t*Math.PI)*s*.5;
         const wig=Math.sin(t*Math.PI*8)*w*.5;
-        pts.push({x:cx+wig,y:y2});pts.push({x:cx-wig*.3,y:y2});pts.push({x:cx+wig*.3,y:y2});
+        pts.push({x:cx+wig,y:y2});pts.push({x:cx-wig*.3,y:y2});
       }
       for(let t=0;t<=1;t+=.02)pts.push({x:cx,y:cy-s+t*s*2});
       return pts;
     }
   },
   {
-    id:'swan', name:'Swan', icon:'🦢', difficulty:3, unlockScore:65,
-    desc:'The ultimate flex — a swan with neck and body',
+    id:'swan', name:'Swan', icon:'🦢', difficulty:3, unlockScore:60,
+    desc:'The ultimate flex — swan with neck and body',
     steps:[
-      {title:'Body Base',desc:'Pour a large oval for the swan body (lower right area).',sub:'This is the biggest element — take your time.',tool:'pour',zone:{cx:.55,cy:.55,r:.22},duration:6000},
-      {title:'Wing Detail',desc:'Add texture inside the body with gentle wiggles.',sub:'Small side-to-side motions inside the oval.',tool:'shake',zone:{cx:.55,cy:.55,r:.18},duration:5000},
-      {title:'Neck Curve',desc:'Draw a graceful S-curve up and to the left.',sub:'Start from the body, curve up — this is the neck!',tool:'thin',zone:{cx:.35,cy:.35,r:.2,isLine:true,from:{x:.45,y:.5},to:{x:.3,y:.2}},duration:6000},
-      {title:'Head & Beak',desc:'Finish with a small curve at the top for the head.',sub:'A tiny hook to the right — that\'s the beak!',tool:'drag',zone:{cx:.32,cy:.22,r:.08},duration:4000}
+      {title:'Body',desc:'Pour a large oval in the lower-right area for the body.',sub:'Make it round and full — this is the biggest part.',tool:'pour',duration:20000},
+      {title:'Wing Texture',desc:'Use Wiggle inside the body to add feather texture.',sub:'Gentle side-to-side inside the oval.',tool:'shake',duration:18000},
+      {title:'Neck',desc:'Use Thin to draw an S-curve going up-left from the body.',sub:'Graceful curve — this is the swan neck!',tool:'thin',duration:18000},
+      {title:'Head',desc:'Use Etch to add a small hook at the top for the head.',sub:'A tiny curve to the right — the beak!',tool:'drag',duration:12000}
     ],
     buildGuide:(ctx,cx,cy,r)=>{
       const s=r*.6;
@@ -283,12 +273,10 @@ const PATTERNS = [
     },
     getTargetPixels:(cx,cy,r)=>{
       const pts=[];const s=r*.6;
-      for(let a=0;a<Math.PI*2;a+=.06){
-        for(let d=.3;d<=1;d+=.15){
-          pts.push({x:cx+s*.1+Math.cos(a+.1)*s*.75*d,y:cy+s*.3+Math.sin(a+.1)*s*.5*d});
-        }
-      }
-      for(let t=0;t<=1;t+=.02){
+      for(let a=0;a<Math.PI*2;a+=.05){for(let d=.2;d<=1;d+=.12){
+        pts.push({x:cx+s*.1+Math.cos(a+.1)*s*.75*d,y:cy+s*.3+Math.sin(a+.1)*s*.5*d});
+      }}
+      for(let t=0;t<=1;t+=.015){
         const x=Math.pow(1-t,3)*(cx-s*.5)+3*Math.pow(1-t,2)*t*(cx-s*.9)+3*(1-t)*t*t*(cx-s*.7)+t*t*t*(cx-s*.2);
         const y=Math.pow(1-t,3)*(cy+s*.1)+3*Math.pow(1-t,2)*t*(cy-s*.3)+3*(1-t)*t*t*(cy-s*1.1)+t*t*t*(cy-s*.9);
         pts.push({x,y});
@@ -297,36 +285,32 @@ const PATTERNS = [
     }
   },
   {
-    id:'bear', name:'Bear Face', icon:'🐻', difficulty:3, unlockScore:65,
-    desc:'A cute bear face — crowd favorite!',
+    id:'bear', name:'Bear Face', icon:'🐻', difficulty:3, unlockScore:60,
+    desc:'A cute bear — crowd favorite!',
     steps:[
-      {title:'Face Base',desc:'Pour a big circle in the center for the face.',sub:'Fill it evenly — this is the main face.',tool:'pour',zone:{cx:.5,cy:.5,r:.22},duration:6000},
-      {title:'Left Ear',desc:'Add a small circle on the upper left.',sub:'Round and cute — bear ears are small!',tool:'pour',zone:{cx:.35,cy:.28,r:.09},duration:4000},
-      {title:'Right Ear',desc:'Add a small circle on the upper right.',sub:'Match the left ear — symmetry matters!',tool:'pour',zone:{cx:.65,cy:.28,r:.09},duration:4000},
-      {title:'Eyes & Nose',desc:'Use the etching tool to draw two dot eyes and a triangle nose.',sub:'Poke two dots for eyes, drag a small V for the nose.',tool:'drag',zone:{cx:.5,cy:.48,r:.18},duration:8000},
-      {title:'Mouth',desc:'Etch a small curved smile below the nose.',sub:'A tiny U shape — make it cute!',tool:'drag',zone:{cx:.5,cy:.58,r:.1},duration:4000}
+      {title:'Face',desc:'Pour a big circle in the center for the face.',sub:'Fill it evenly — this is the main face.',tool:'pour',duration:20000},
+      {title:'Left Ear',desc:'Pour a small circle on the upper left.',sub:'Round and small — bear ears!',tool:'pour',duration:14000},
+      {title:'Right Ear',desc:'Pour a small circle on the upper right.',sub:'Match the left ear — symmetry!',tool:'pour',duration:14000},
+      {title:'Features',desc:'Use Etch to draw two eyes (dots) and a nose (V shape).',sub:'Two small dots + a small triangle below.',tool:'drag',duration:20000},
+      {title:'Mouth',desc:'Etch a small smile below the nose.',sub:'A tiny curved U — make it cute!',tool:'drag',duration:14000}
     ],
     buildGuide:(ctx,cx,cy,r)=>{
       const s=r*.6;
       ctx.beginPath();ctx.arc(cx,cy+s*.05,s*.7,0,Math.PI*2);
       ctx.moveTo(cx-s*.55+s*.28,cy-s*.5);ctx.arc(cx-s*.55,cy-s*.5,s*.28,0,Math.PI*2);
       ctx.moveTo(cx+s*.55+s*.28,cy-s*.5);ctx.arc(cx+s*.55,cy-s*.5,s*.28,0,Math.PI*2);
-      // Eyes
-      ctx.moveTo(cx-s*.25+s*.08,cy-.05*s);ctx.arc(cx-s*.25,cy-s*.05,s*.08,0,Math.PI*2);
+      ctx.moveTo(cx-s*.25+s*.08,cy-s*.05);ctx.arc(cx-s*.25,cy-s*.05,s*.08,0,Math.PI*2);
       ctx.moveTo(cx+s*.25+s*.08,cy-s*.05);ctx.arc(cx+s*.25,cy-s*.05,s*.08,0,Math.PI*2);
-      // Nose
       ctx.moveTo(cx,cy+s*.12);ctx.lineTo(cx-s*.1,cy+s*.25);ctx.lineTo(cx+s*.1,cy+s*.25);ctx.closePath();
-      // Mouth
-      ctx.moveTo(cx-s*.12,cy+s*.32);
-      ctx.quadraticCurveTo(cx,cy+s*.45,cx+s*.12,cy+s*.32);
+      ctx.moveTo(cx-s*.12,cy+s*.32);ctx.quadraticCurveTo(cx,cy+s*.45,cx+s*.12,cy+s*.32);
     },
     getTargetPixels:(cx,cy,r)=>{
       const pts=[];const s=r*.6;
-      for(let a=0;a<Math.PI*2;a+=.05){for(let d=.2;d<=1;d+=.15){
+      for(let a=0;a<Math.PI*2;a+=.04){for(let d=.2;d<=1;d+=.12){
         pts.push({x:cx+Math.cos(a)*s*.7*d,y:cy+s*.05+Math.sin(a)*s*.7*d});
       }}
       [{x:-.55,y:-.5,r:.28},{x:.55,y:-.5,r:.28}].forEach(e=>{
-        for(let a=0;a<Math.PI*2;a+=.15){for(let d=.3;d<=1;d+=.2){
+        for(let a=0;a<Math.PI*2;a+=.12){for(let d=.3;d<=1;d+=.2){
           pts.push({x:cx+s*e.x+Math.cos(a)*s*e.r*d,y:cy+s*e.y+Math.sin(a)*s*e.r*d});
         }}
       });
@@ -335,184 +319,160 @@ const PATTERNS = [
   }
 ];
 
-// ====== TOOL DEFS ======
-const TOOLS = {
-  pour:{emoji:'🥛',label:'Pour',size:16,color:'rgba(255,248,230,.85)',shadow:true},
-  thin:{emoji:'💧',label:'Thin',size:5,color:'rgba(255,248,235,.8)',shadow:false},
-  shake:{emoji:'〰️',label:'Wiggle',size:18,color:'rgba(255,248,230,.8)',shadow:true,wiggle:true},
-  drag:{emoji:'🪡',label:'Etch',size:3,color:'rgba(58,30,16,.7)',shadow:false,isDrag:true}
+// ===== TOOLS =====
+const TOOLS={
+  pour:{emoji:'🥛',label:'Pour',size:18,color:'rgba(255,248,230,.85)'},
+  thin:{emoji:'💧',label:'Thin',size:5,color:'rgba(255,248,235,.8)'},
+  shake:{emoji:'〰️',label:'Wiggle',size:20,color:'rgba(255,248,230,.8)',wiggle:true},
+  drag:{emoji:'🪡',label:'Etch',size:3,isDrag:true}
 };
 
-// ====== DANIEL ======
+// ===== DANIEL QUOTES =====
 const DANIEL_COMMENTS={
-  terrible:["Did you sneeze into my cup?!","I've seen better art from a broken machine!","Is this abstract? Because it's abstractly terrible.","My 3-year-old could do better!"],
-  bad:["Hmm... I think I see something? Maybe?","Were you trying to draw something specific?","Points for effort? Not many though."],
-  ok:["Not bad... I've seen worse.","It's recognizable! That's something.","Getting there! Practice more."],
+  terrible:["Did you sneeze into my cup?!","Is this abstract? It's abstractly terrible.","My 3-year-old could do better!","You call THIS latte art?!"],
+  bad:["I think I see something? Maybe?","Were you trying to draw something?","Points for effort... not many though."],
+  ok:["Not bad... I've seen worse.","It's recognizable! That's something.","Getting there! Keep practicing."],
   good:["Ok ok, I'm actually impressed!","Now THAT'S what I'm talking about!","I'd post this on Instagram."],
-  perfect:["MAGNIFICENT! You're an artist!","*chef's kiss* Bellissimo!","Can I hire you? Actually, can I marry this latte?"]
+  perfect:["MAGNIFICENT! You're an artist!","*chef's kiss* Bellissimo!","Can I marry this latte?"]
 };
 const TIPS={
-  heart:["Try pouring slower and steadier in the center","Push the pour forward more before the strike-through","Make the strike-through one confident motion — don't hesitate"],
-  tulip:["Make each circle distinctly different in size","Let each pour push into the one below it","The pull-through should be straight and centered"],
-  rosetta:["Keep your wiggles even and rhythmic","Start wide at the top, narrow toward the bottom","The strike-through defines the whole shape — make it count"],
-  swan:["The body should be a smooth oval, not a circle","The neck curve needs to be one fluid S-motion","Keep the head small — less is more"],
-  bear:["Symmetry is key — ears should mirror each other","The face should be round, not oval","Light touches for the eyes — don't overdo it"]
+  heart:["Pour more milk in the center to build a bigger base","Push upward more before the strike-through","Make the strike-through one confident motion"],
+  tulip:["Make each circle distinctly different in size","Let each pour push into the one below","The pull-through should be straight and centered"],
+  rosetta:["Keep your wiggles even and rhythmic","Start wide at the top, narrow toward the bottom","The strike-through defines everything"],
+  swan:["The body should be a smooth full oval","The neck needs to be one fluid S-curve","Keep the head small — less is more"],
+  bear:["Symmetry is key — ears should mirror each other","The face should be round and full","Light touches for eyes — don't overdo it"]
 };
 
-// ====== STATE ======
+// ===== STATE =====
 let cupSize,cupCx,cupCy,cupR,cupCtx,guideCtx;
-let drawing=false,currentTool='pour',pourPoints=[];
+let drawing=false,currentTool='pour',pourPoints=[],lastPos=null;
 let shakePhase=0,currentPattern=null,currentStep=0;
-let timeLeft,maxTime,timerInterval,danielTimer,guideAnimTimer;
+let timeLeft=0,maxTime=0,timerInterval=null,danielTimer=null;
 let bestScores=JSON.parse(localStorage.getItem('dc_scores')||'{}');
 let totalStars=Object.values(bestScores).reduce((a,b)=>a+b,0);
+let inputBound=false;
 
-// ====== SCREENS ======
-function showStart(){
-  hideAll();document.getElementById('startScreen').classList.remove('hidden');
-}
+// ===== SCREENS =====
+function showStart(){hideAll();document.getElementById('startScreen').classList.remove('hidden')}
 function showSelect(){
   hideAll();
   totalStars=Object.values(bestScores).reduce((a,b)=>a+b,0);
-  const grid=document.getElementById('patternGrid');
-  grid.innerHTML='';
+  const grid=document.getElementById('patternGrid');grid.innerHTML='';
   PATTERNS.forEach(p=>{
     const unlocked=totalStars>=p.unlockScore;
     const best=bestScores[p.id]||0;
-    const stars=best>=85?3:best>=60?2:best>=35?1:0;
+    const stars=best>=80?3:best>=55?2:best>=30?1:0;
     const card=document.createElement('div');
     card.className='pattern-card'+(unlocked?'':' locked')+(stars>=3?' mastered':'');
-    card.innerHTML=`
-      <div class="p-icon">${p.icon}</div>
-      <div class="p-name">${p.name}</div>
+    card.innerHTML=`<div class="p-icon">${p.icon}</div><div class="p-name">${p.name}</div>
       <div class="p-diff">${'⭐'.repeat(p.difficulty)} ${unlocked?'':'🔒 Need '+p.unlockScore+' pts'}</div>
-      <div class="p-stars">${stars>0?'★'.repeat(stars)+'☆'.repeat(3-stars):'☆☆☆'}</div>
-    `;
+      <div class="p-stars">${stars>0?'★'.repeat(stars)+'☆'.repeat(3-stars):'☆☆☆'}</div>`;
     if(unlocked)card.onclick=()=>startPattern(p);
     grid.appendChild(card);
   });
   document.getElementById('selectScreen').classList.remove('hidden');
 }
 function hideAll(){
-  ['startScreen','selectScreen','resultScreen','gameArea'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el.classList)el.classList.add('hidden');
-    if(id==='gameArea')el.style.display='none';
-  });
+  ['startScreen','selectScreen','resultScreen'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('gameArea').style.display='none';
 }
 
-// ====== INIT CUP ======
+// ===== CUP =====
 function initCup(){
-  const c=document.getElementById('cupCanvas');
-  const g=document.getElementById('guideCanvas');
+  const c=document.getElementById('cupCanvas');const g=document.getElementById('guideCanvas');
   cupCtx=c.getContext('2d');guideCtx=g.getContext('2d');
   const vw=window.innerWidth,vh=window.innerHeight;
-  cupSize=Math.min(vw*.85,vh*.5,380);
+  cupSize=Math.min(vw*.82,vh*.48,360);
   cupR=cupSize/2;cupCx=cupR;cupCy=cupR;
   c.width=c.height=g.width=g.height=cupSize;
   drawCup();
 }
 function drawCup(){
   const ctx=cupCtx;ctx.clearRect(0,0,cupSize,cupSize);
-  // Shadow
-  ctx.save();ctx.beginPath();ctx.ellipse(cupCx,cupCy+cupR*.05,cupR*.95,cupR*.95,0,0,Math.PI*2);
-  ctx.fillStyle='rgba(0,0,0,.3)';ctx.filter='blur(15px)';ctx.fill();ctx.restore();
-  // Coffee
+  ctx.save();ctx.beginPath();ctx.ellipse(cupCx,cupCy+cupR*.04,cupR*.95,cupR*.95,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(0,0,0,.25)';ctx.filter='blur(12px)';ctx.fill();ctx.restore();
   const grad=ctx.createRadialGradient(cupCx,cupCy,0,cupCx,cupCy,cupR*.88);
   grad.addColorStop(0,'#5a3222');grad.addColorStop(.6,'#4a2818');grad.addColorStop(1,'#3a1e10');
   ctx.beginPath();ctx.arc(cupCx,cupCy,cupR*.88,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
-  // Rim
-  ctx.beginPath();ctx.arc(cupCx,cupCy,cupR*.92,0,Math.PI*2);
-  ctx.strokeStyle='#d4c4b0';ctx.lineWidth=cupR*.08;ctx.stroke();
-  ctx.beginPath();ctx.arc(cupCx,cupCy,cupR*.88,0,Math.PI*2);
-  ctx.strokeStyle='rgba(255,255,255,.08)';ctx.lineWidth=1;ctx.stroke();
+  ctx.beginPath();ctx.arc(cupCx,cupCy,cupR*.92,0,Math.PI*2);ctx.strokeStyle='#d4c4b0';ctx.lineWidth=cupR*.08;ctx.stroke();
+  ctx.beginPath();ctx.arc(cupCx,cupCy,cupR*.88,0,Math.PI*2);ctx.strokeStyle='rgba(255,255,255,.06)';ctx.lineWidth=1;ctx.stroke();
 }
-
-// ====== GUIDE ======
-function drawGuide(pattern,opacity){
+function drawGuidePattern(pattern,opacity){
   guideCtx.clearRect(0,0,cupSize,cupSize);
   guideCtx.save();guideCtx.globalAlpha=opacity||.3;
-  guideCtx.strokeStyle='rgba(255,248,230,.8)';guideCtx.lineWidth=2;
+  guideCtx.strokeStyle='rgba(255,248,230,.7)';guideCtx.lineWidth=2;
   guideCtx.setLineDash([5,5]);
   pattern.buildGuide(guideCtx,cupCx,cupCy,cupR*.75);
   guideCtx.stroke();guideCtx.restore();guideCtx.setLineDash([]);
 }
 
-// ====== STEP ZONE HIGHLIGHT ======
-function showStepZone(step){
-  const g=document.getElementById('guideCanvas');
-  const gctx=guideCtx;
-  // Draw current pattern guide faintly
-  drawGuide(currentPattern,.15);
-  // Highlight active zone
-  if(!step.zone)return;
-  const z=step.zone;
-  const zx=z.cx*cupSize,zy=z.cy*cupSize,zr=z.r*cupSize;
-  gctx.save();
-  gctx.strokeStyle='rgba(244,208,63,.4)';gctx.lineWidth=2;gctx.setLineDash([4,4]);
-  if(z.isLine&&z.from&&z.to){
-    gctx.beginPath();
-    gctx.moveTo(z.from.x*cupSize,z.from.y*cupSize);
-    gctx.lineTo(z.to.x*cupSize,z.to.y*cupSize);
-    gctx.stroke();
-    // Arrow head
-    const ax=z.to.x*cupSize,ay=z.to.y*cupSize;
-    const angle=Math.atan2(z.to.y-z.from.y,z.to.x-z.from.x);
-    gctx.beginPath();gctx.moveTo(ax,ay);
-    gctx.lineTo(ax-10*Math.cos(angle-.4),ay-10*Math.sin(angle-.4));
-    gctx.lineTo(ax-10*Math.cos(angle+.4),ay-10*Math.sin(angle+.4));
-    gctx.closePath();gctx.fillStyle='rgba(244,208,63,.4)';gctx.fill();
-  } else {
-    gctx.beginPath();gctx.arc(zx,zy,zr,0,Math.PI*2);gctx.stroke();
-    gctx.fillStyle='rgba(244,208,63,.06)';gctx.fill();
-  }
-  gctx.restore();gctx.setLineDash([]);
+// ===== DRAWING =====
+function getPos(e){
+  const c=document.getElementById('cupCanvas');const rect=c.getBoundingClientRect();
+  const ex=e.touches?e.touches[0].clientX:e.clientX;
+  const ey=e.touches?e.touches[0].clientY:e.clientY;
+  return{x:ex-rect.left,y:ey-rect.top};
 }
+function inCup(x,y){const dx=x-cupCx,dy=y-cupCy;return Math.sqrt(dx*dx+dy*dy)<cupR*.85}
 
-// Animated guide dot
-function startGuideAnimation(step){
-  stopGuideAnimation();
-  const arrow=document.getElementById('guideArrow');
-  if(!step.zone)return;
-  const canvas=document.getElementById('cupCanvas');
-  const rect=canvas.getBoundingClientRect();
-  const z=step.zone;
-  
-  if(z.isLine&&z.from&&z.to){
-    let t=0;
-    arrow.style.display='block';
-    guideAnimTimer=setInterval(()=>{
-      t=(t+.008)%1;
-      const x=rect.left+(z.from.x+(z.to.x-z.from.x)*t)*cupSize-12;
-      const y=rect.top+(z.from.y+(z.to.y-z.from.y)*t)*cupSize-12;
-      arrow.style.left=x+'px';arrow.style.top=y+'px';
-    },30);
+function onStart(e){
+  e.preventDefault();const p=getPos(e);if(!inCup(p.x,p.y))return;
+  drawing=true;shakePhase=0;lastPos=p;
+  pourPoints.push({...p,tool:currentTool});
+  drawAt(p.x,p.y);
+}
+function onMove(e){
+  e.preventDefault();if(!drawing)return;
+  const p=getPos(e);if(!inCup(p.x,p.y))return;
+  let x=p.x,y=p.y;
+  if(TOOLS[currentTool].wiggle){shakePhase+=.4;x+=Math.sin(shakePhase)*16;}
+  pourPoints.push({x,y,tool:currentTool});
+  drawLine(lastPos.x,lastPos.y,x,y);
+  lastPos={x,y};
+}
+function onEnd(e){e.preventDefault();drawing=false;lastPos=null;}
+
+function drawAt(x,y){
+  const ctx=cupCtx;const t=TOOLS[currentTool];
+  if(t.isDrag){
+    ctx.beginPath();ctx.arc(x,y,t.size+1,0,Math.PI*2);ctx.fillStyle='rgba(42,22,10,.7)';ctx.fill();
   } else {
-    let t=0;
-    arrow.style.display='block';
-    guideAnimTimer=setInterval(()=>{
-      t+=.02;
-      const x=rect.left+z.cx*cupSize+Math.cos(t)*z.r*cupSize*.6-12;
-      const y=rect.top+z.cy*cupSize+Math.sin(t)*z.r*cupSize*.6-12;
-      arrow.style.left=x+'px';arrow.style.top=y+'px';
-    },30);
+    ctx.beginPath();ctx.arc(x,y,t.size,0,Math.PI*2);ctx.fillStyle=t.color;ctx.fill();
   }
 }
-function stopGuideAnimation(){
-  clearInterval(guideAnimTimer);
-  document.getElementById('guideArrow').style.display='none';
+function drawLine(x1,y1,x2,y2){
+  const ctx=cupCtx;const t=TOOLS[currentTool];
+  if(t.isDrag){
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
+    ctx.strokeStyle='rgba(42,22,10,.8)';ctx.lineWidth=t.size*2;ctx.lineCap='round';ctx.stroke();
+  } else {
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
+    ctx.strokeStyle=t.color;ctx.lineWidth=t.size*2;ctx.lineCap='round';ctx.stroke();
+    // Soft edge
+    ctx.beginPath();ctx.arc(x2,y2,t.size,0,Math.PI*2);ctx.fillStyle=t.color;ctx.fill();
+  }
 }
 
-// ====== TOOLBAR ======
-function buildToolbar(steps){
+function bindInput(){
+  if(inputBound)return;inputBound=true;
+  const c=document.getElementById('cupCanvas');
+  c.addEventListener('mousedown',onStart);
+  c.addEventListener('mousemove',onMove);
+  c.addEventListener('mouseup',onEnd);
+  c.addEventListener('mouseleave',onEnd);
+  c.addEventListener('touchstart',onStart,{passive:false});
+  c.addEventListener('touchmove',onMove,{passive:false});
+  c.addEventListener('touchend',onEnd,{passive:false});
+}
+
+// ===== TOOLBAR =====
+function buildToolbar(){
   const tb=document.getElementById('toolbar');tb.innerHTML='';
-  const toolsUsed=new Set(steps.map(s=>s.tool));
-  // Always include all tools but highlight recommended
   Object.entries(TOOLS).forEach(([id,t])=>{
     const btn=document.createElement('button');
     btn.className='tool-btn'+(id===currentTool?' active':'');
     btn.dataset.tool=id;
-    btn.innerHTML=`${t.emoji}<span class="tool-label">${t.label}</span>`;
+    btn.innerHTML=`${t.emoji}<span class="tl">${t.label}</span>`;
     btn.onclick=()=>{
       document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');currentTool=id;
@@ -520,17 +480,18 @@ function buildToolbar(steps){
     tb.appendChild(btn);
   });
 }
-function highlightRecommendedTool(toolId){
+function selectTool(id){
+  currentTool=id;
   document.querySelectorAll('.tool-btn').forEach(b=>{
-    b.classList.remove('recommended');
-    if(b.dataset.tool===toolId)b.classList.add('recommended');
+    b.classList.remove('active','recommended');
+    if(b.dataset.tool===id){b.classList.add('active');b.classList.add('recommended');}
   });
 }
 
-// ====== STEP UI ======
+// ===== STEP UI =====
 function updateStepUI(){
   const step=currentPattern.steps[currentStep];
-  document.getElementById('stepTitle').textContent=step.title;
+  document.getElementById('stepTitle').textContent=`Step ${currentStep+1}: ${step.title}`;
   document.getElementById('stepDesc').textContent=step.desc;
   document.getElementById('stepSub').textContent=step.sub;
   document.getElementById('stepNum').textContent=currentStep+1;
@@ -543,128 +504,24 @@ function updateStepUI(){
     dots.appendChild(d);
   });
   
-  // Auto-select recommended tool
-  currentTool=step.tool;
-  document.querySelectorAll('.tool-btn').forEach(b=>{
-    b.classList.remove('active');
-    if(b.dataset.tool===currentTool)b.classList.add('active');
-  });
-  highlightRecommendedTool(step.tool);
-  showStepZone(step);
-  startGuideAnimation(step);
+  // Show/hide next button - last step says "Finish"
+  const btn=document.getElementById('nextStepBtn');
+  btn.textContent=currentStep>=currentPattern.steps.length-1?'✓ Finish & Score':'Next Step →';
+  btn.style.display='block';
+  
+  selectTool(step.tool);
 }
 
-// ====== DRAWING ======
-function getPos(e){
-  const c=document.getElementById('cupCanvas');const rect=c.getBoundingClientRect();
-  const cx=e.touches?e.touches[0].clientX:e.clientX;
-  const cy=e.touches?e.touches[0].clientY:e.clientY;
-  return{x:cx-rect.left,y:cy-rect.top};
-}
-function inCup(x,y){const dx=x-cupCx,dy=y-cupCy;return Math.sqrt(dx*dx+dy*dy)<cupR*.85}
-function startDraw(e){
-  e.preventDefault();const p=getPos(e);if(!inCup(p.x,p.y))return;
-  drawing=true;shakePhase=0;
-  pourPoints.push({...p,tool:currentTool,step:currentStep});
-  drawMilk(p.x,p.y,true);
-}
-function moveDraw(e){
-  e.preventDefault();if(!drawing)return;
-  const p=getPos(e);if(!inCup(p.x,p.y))return;
-  let x=p.x,y=p.y;
-  if(currentTool==='shake'){shakePhase+=.4;x+=Math.sin(shakePhase)*15;}
-  pourPoints.push({x,y,tool:currentTool,step:currentStep});
-  drawMilk(x,y,false);
-}
-function endDraw(e){e.preventDefault();drawing=false;}
-
-function drawMilk(x,y,isNew){
-  const ctx=cupCtx;const t=TOOLS[currentTool];
-  const sz=t.size;
-  
-  if(t.isDrag){
-    // Etch: brown line
-    ctx.beginPath();ctx.arc(x,y,sz+1,0,Math.PI*2);
-    ctx.fillStyle='rgba(74,40,24,.5)';ctx.fill();
-    if(pourPoints.length>1){
-      const prev=pourPoints[pourPoints.length-2];
-      ctx.beginPath();ctx.moveTo(prev.x,prev.y);ctx.lineTo(x,y);
-      ctx.strokeStyle='rgba(42,22,10,.8)';ctx.lineWidth=sz;ctx.lineCap='round';ctx.stroke();
-    }
-  } else {
-    ctx.beginPath();ctx.arc(x,y,sz,0,Math.PI*2);ctx.fillStyle=t.color;ctx.fill();
-    if(pourPoints.length>1){
-      const prev=pourPoints[pourPoints.length-2];
-      ctx.beginPath();ctx.moveTo(prev.x,prev.y);ctx.lineTo(x,y);
-      ctx.strokeStyle=t.color;ctx.lineWidth=sz*2;ctx.lineCap='round';ctx.stroke();
-    }
-    if(t.shadow){
-      ctx.beginPath();ctx.arc(x,y+1,sz*.7,0,Math.PI*2);
-      ctx.fillStyle='rgba(0,0,0,.04)';ctx.fill();
-    }
-  }
-}
-
-// ====== SCORING ======
-function calcScore(){
-  if(pourPoints.length<5)return{total:0,coverage:0,accuracy:0,smoothness:0};
-  const targetPts=currentPattern.getTargetPixels(cupCx,cupCy,cupR*.75);
-  
-  const thresh=cupR*.16;
-  // Coverage
-  let covered=0;
-  targetPts.forEach(tp=>{
-    if(pourPoints.some(pp=>{const dx=pp.x-tp.x,dy=pp.y-tp.y;return Math.sqrt(dx*dx+dy*dy)<thresh}))covered++;
-  });
-  const coverage=Math.min(100,covered/targetPts.length*100);
-  
-  // Accuracy
-  let accurate=0;const accT=cupR*.2;
-  pourPoints.forEach(pp=>{
-    if(targetPts.some(tp=>{const dx=pp.x-tp.x,dy=pp.y-tp.y;return Math.sqrt(dx*dx+dy*dy)<accT}))accurate++;
-  });
-  const accuracy=Math.min(100,accurate/pourPoints.length*100);
-  
-  // Smoothness
-  let smoothness=100;
-  if(pourPoints.length>3){
-    let totalAng=0;
-    for(let i=2;i<pourPoints.length;i++){
-      const a1=Math.atan2(pourPoints[i-1].y-pourPoints[i-2].y,pourPoints[i-1].x-pourPoints[i-2].x);
-      const a2=Math.atan2(pourPoints[i].y-pourPoints[i-1].y,pourPoints[i].x-pourPoints[i-1].x);
-      let d=Math.abs(a2-a1);if(d>Math.PI)d=Math.PI*2-d;totalAng+=d;
-    }
-    smoothness=Math.max(0,100-totalAng/(pourPoints.length-2)*55);
-  }
-  
-  const diff=1+(currentPattern.difficulty-1)*.15;
-  const total=Math.min(100,Math.round((coverage*.4+accuracy*.3+smoothness*.3)*diff));
-  return{total,coverage:Math.round(coverage),accuracy:Math.round(accuracy),smoothness:Math.round(smoothness)};
-}
-
-// ====== DANIEL ======
-function spawnDaniel(){
-  const popup=document.createElement('div');popup.className='daniel-popup';
-  const positions=[{top:'15%',left:'3%'},{top:'15%',right:'3%'},{bottom:'28%',left:'3%'},{bottom:'28%',right:'3%'}];
-  const pos=positions[Math.floor(Math.random()*positions.length)];
-  Object.entries(pos).forEach(([k,v])=>popup.style[k]=v);
-  const msgs=["Is that supposed to be art?!","Hurry up! ⏰","That doesn't look right...","Are you even trying?!",
-    "*judges silently* 👀","The foam is dying!","Less thinking more pouring!","I could do better blindfolded!",
-    "My patience has limits! 😡","That's... interesting? 🤔","You're making me nervous! 😤","Wrong tool maybe? 🧐"];
-  popup.innerHTML=`<img src="daniel.jpg" alt="Daniel"><div class="bubble">${msgs[Math.floor(Math.random()*msgs.length)]}</div>`;
-  document.body.appendChild(popup);setTimeout(()=>popup.remove(),2500);
-}
-
-// ====== GAME FLOW ======
+// ===== GAME FLOW =====
 function startPattern(pattern){
-  currentPattern=pattern;currentStep=0;pourPoints=[];drawing=false;
+  currentPattern=pattern;currentStep=0;pourPoints=[];drawing=false;lastPos=null;
   hideAll();
   document.getElementById('gameArea').style.display='block';
   document.getElementById('hudLeft').textContent='☕ '+pattern.name;
   document.getElementById('hudRight').textContent='⭐ '+totalStars;
   
-  initCup();setupInput();
-  buildToolbar(pattern.steps);
+  initCup();bindInput();buildToolbar();
+  drawGuidePattern(pattern,.3);
   
   // Splash
   const sp=document.getElementById('levelSplash');
@@ -672,29 +529,34 @@ function startPattern(pattern){
   document.getElementById('splashName').textContent=pattern.name;
   document.getElementById('splashDiff').textContent='Difficulty: '+'⭐'.repeat(pattern.difficulty);
   sp.classList.add('show');
-  setTimeout(()=>{sp.classList.remove('show');startStep();},1800);
+  setTimeout(()=>{sp.classList.remove('show');startStep();},1500);
 }
 
 function startStep(){
   const step=currentPattern.steps[currentStep];
   updateStepUI();
   
-  // Timer for this step
+  // Start timer for this step
   maxTime=step.duration;timeLeft=maxTime;
   clearInterval(timerInterval);
   timerInterval=setInterval(()=>{
     timeLeft-=100;
     document.getElementById('timerFill').style.width=Math.max(0,timeLeft/maxTime*100)+'%';
-    if(timeLeft<=0){clearInterval(timerInterval);advanceStep();}
+    if(timeLeft<=0){clearInterval(timerInterval);userAdvanceStep();}
   },100);
   
-  // Daniel
+  // Fade guide gradually during the whole exercise
+  const guideEl=document.getElementById('guideCanvas');
+  guideEl.style.transition='opacity 8s';
+  guideEl.style.opacity=Math.max(.08,.3-currentStep*.08);
+  
+  // Daniel pops up occasionally
   clearInterval(danielTimer);
-  danielTimer=setInterval(()=>{if(Math.random()<.25+currentPattern.difficulty*.08)spawnDaniel();},3000);
+  danielTimer=setInterval(()=>{if(Math.random()<.2+currentPattern.difficulty*.05)spawnDaniel();},4000);
 }
 
-function advanceStep(){
-  stopGuideAnimation();
+function userAdvanceStep(){
+  clearInterval(timerInterval);
   currentStep++;
   if(currentStep>=currentPattern.steps.length){
     finishPattern();
@@ -704,17 +566,17 @@ function advanceStep(){
 }
 
 function finishPattern(){
-  clearInterval(timerInterval);clearInterval(danielTimer);stopGuideAnimation();drawing=false;
+  clearInterval(timerInterval);clearInterval(danielTimer);drawing=false;
   
   const result=calcScore();
+  
   let grade,emoji,cat;
-  if(result.total>=85){grade='MASTERPIECE';emoji='🏆';cat='perfect';}
-  else if(result.total>=60){grade='GREAT';emoji='⭐';cat='good';}
-  else if(result.total>=35){grade='DECENT';emoji='👍';cat='ok';}
+  if(result.total>=80){grade='MASTERPIECE';emoji='🏆';cat='perfect';}
+  else if(result.total>=55){grade='GREAT';emoji='⭐';cat='good';}
+  else if(result.total>=30){grade='DECENT';emoji='👍';cat='ok';}
   else if(result.total>=15){grade='MEH';emoji='😐';cat='bad';}
   else{grade='DISASTER';emoji='💀';cat='terrible';}
   
-  // Save best
   const prev=bestScores[currentPattern.id]||0;
   if(result.total>prev){
     bestScores[currentPattern.id]=result.total;
@@ -728,67 +590,100 @@ function finishPattern(){
   document.getElementById('resultGrade').textContent=emoji+' '+grade;
   document.getElementById('resultBreakdown').innerHTML=
     `📐 Coverage: ${result.coverage}%<br>🎯 Accuracy: ${result.accuracy}%<br>〰️ Smoothness: ${result.smoothness}%`+
-    (result.total>prev&&prev>0?`<br>🎉 New personal best!`:'');
+    (result.total>prev&&prev>0?'<br>🎉 New personal best!':'');
   
   // Tip
   const tips=TIPS[currentPattern.id];
-  if(result.total<70&&tips){
-    const tip=tips[Math.floor(Math.random()*tips.length)];
+  if(result.total<65&&tips){
     document.getElementById('resultTip').style.display='block';
-    document.getElementById('resultTip').innerHTML=`<strong>💡 Tip:</strong> ${tip}`;
-  } else {
-    document.getElementById('resultTip').style.display='none';
-  }
+    document.getElementById('resultTip').innerHTML='<strong>💡 Tip:</strong> '+tips[Math.floor(Math.random()*tips.length)];
+  }else{document.getElementById('resultTip').style.display='none';}
   
-  // Compare: capture current cup as small canvas
-  const compareRow=document.getElementById('compareRow');
-  compareRow.innerHTML='';
+  // Comparison canvases
+  const cr=document.getElementById('compareRow');cr.innerHTML='';
+  const sz=100;
   // Your art
-  const yourC=document.createElement('canvas');yourC.width=yourC.height=90;
-  const yctx=yourC.getContext('2d');yctx.drawImage(document.getElementById('cupCanvas'),0,0,cupSize,cupSize,0,0,90,90);
-  const yourDiv=document.createElement('div');yourDiv.className='compare-item';
-  yourDiv.appendChild(yourC);yourDiv.innerHTML+='<div class="compare-label">Your Art</div>';
-  compareRow.appendChild(yourDiv);
+  const yc=document.createElement('canvas');yc.width=yc.height=sz;
+  yc.getContext('2d').drawImage(document.getElementById('cupCanvas'),0,0,cupSize,cupSize,0,0,sz,sz);
+  const yd=document.createElement('div');yd.className='compare-item';
+  yd.appendChild(yc);yd.innerHTML+='<div class="compare-label">Your Art</div>';cr.appendChild(yd);
   // Target
-  const tarC=document.createElement('canvas');tarC.width=tarC.height=90;
-  const tctx=tarC.getContext('2d');
-  // Draw mini cup + guide
-  tctx.beginPath();tctx.arc(45,45,40,0,Math.PI*2);
-  const tg=tctx.createRadialGradient(45,45,0,45,45,40);
+  const tc=document.createElement('canvas');tc.width=tc.height=sz;
+  const tctx=tc.getContext('2d');
+  const tg=tctx.createRadialGradient(sz/2,sz/2,0,sz/2,sz/2,sz*.44);
   tg.addColorStop(0,'#5a3222');tg.addColorStop(1,'#3a1e10');
-  tctx.fillStyle=tg;tctx.fill();
-  tctx.strokeStyle='rgba(255,248,230,.8)';tctx.lineWidth=1.5;tctx.setLineDash([3,3]);
-  tctx.save();tctx.translate(45-cupCx*90/cupSize,45-cupCy*90/cupSize);tctx.scale(90/cupSize,90/cupSize);
+  tctx.beginPath();tctx.arc(sz/2,sz/2,sz*.44,0,Math.PI*2);tctx.fillStyle=tg;tctx.fill();
+  // Draw filled guide
+  tctx.save();tctx.scale(sz/cupSize,sz/cupSize);
+  tctx.fillStyle='rgba(255,248,230,.6)';tctx.strokeStyle='rgba(255,248,230,.8)';tctx.lineWidth=3;
   currentPattern.buildGuide(tctx,cupCx,cupCy,cupR*.75);
-  tctx.restore();tctx.stroke();tctx.setLineDash([]);
-  const tarDiv=document.createElement('div');tarDiv.className='compare-item';
-  tarDiv.appendChild(tarC);tarDiv.innerHTML+='<div class="compare-label">Target</div>';
-  compareRow.appendChild(tarDiv);
+  tctx.fill();tctx.stroke();tctx.restore();
+  const td=document.createElement('div');td.className='compare-item';
+  td.appendChild(tc);td.innerHTML+='<div class="compare-label">Target</div>';cr.appendChild(td);
   
   document.getElementById('gameArea').style.display='none';
   document.getElementById('resultScreen').classList.remove('hidden');
 }
 
-function retryPattern(){
-  if(currentPattern)startPattern(currentPattern);
+function retryPattern(){if(currentPattern)startPattern(currentPattern);}
+
+// ===== SCORING =====
+function calcScore(){
+  if(pourPoints.length<10)return{total:0,coverage:0,accuracy:0,smoothness:0};
+  const targetPts=currentPattern.getTargetPixels(cupCx,cupCy,cupR*.75);
+  
+  const thresh=cupR*.15;
+  let covered=0;
+  targetPts.forEach(tp=>{
+    if(pourPoints.some(pp=>{const dx=pp.x-tp.x,dy=pp.y-tp.y;return Math.sqrt(dx*dx+dy*dy)<thresh}))covered++;
+  });
+  const coverage=Math.min(100,covered/Math.max(1,targetPts.length)*100);
+  
+  let accurate=0;const accT=cupR*.18;
+  pourPoints.forEach(pp=>{
+    if(targetPts.some(tp=>{const dx=pp.x-tp.x,dy=pp.y-tp.y;return Math.sqrt(dx*dx+dy*dy)<accT}))accurate++;
+  });
+  const accuracy=Math.min(100,accurate/Math.max(1,pourPoints.length)*100);
+  
+  let smoothness=100;
+  if(pourPoints.length>3){
+    let tot=0;
+    for(let i=2;i<pourPoints.length;i++){
+      const a1=Math.atan2(pourPoints[i-1].y-pourPoints[i-2].y,pourPoints[i-1].x-pourPoints[i-2].x);
+      const a2=Math.atan2(pourPoints[i].y-pourPoints[i-1].y,pourPoints[i].x-pourPoints[i-1].x);
+      let d=Math.abs(a2-a1);if(d>Math.PI)d=Math.PI*2-d;tot+=d;
+    }
+    smoothness=Math.max(0,100-tot/(pourPoints.length-2)*50);
+  }
+  
+  const diff=1+(currentPattern.difficulty-1)*.12;
+  const total=Math.min(100,Math.round((coverage*.4+accuracy*.3+smoothness*.3)*diff));
+  return{total,coverage:Math.round(coverage),accuracy:Math.round(accuracy),smoothness:Math.round(smoothness)};
 }
 
-// ====== INPUT ======
-function setupInput(){
-  const c=document.getElementById('cupCanvas');
-  const nc=c.cloneNode(true);c.replaceWith(nc);
-  cupCtx=nc.getContext('2d');drawCup();
-  nc.addEventListener('mousedown',startDraw);
-  nc.addEventListener('mousemove',moveDraw);
-  nc.addEventListener('mouseup',endDraw);
-  nc.addEventListener('mouseleave',endDraw);
-  nc.addEventListener('touchstart',startDraw,{passive:false});
-  nc.addEventListener('touchmove',moveDraw,{passive:false});
-  nc.addEventListener('touchend',endDraw,{passive:false});
+// ===== DANIEL =====
+function spawnDaniel(){
+  const popup=document.createElement('div');popup.className='daniel-popup';
+  const positions=[{top:'13%',left:'3%'},{top:'13%',right:'3%'},{bottom:'30%',left:'3%'},{bottom:'30%',right:'3%'}];
+  const pos=positions[Math.floor(Math.random()*positions.length)];
+  Object.entries(pos).forEach(([k,v])=>popup.style[k]=v);
+  const msgs=["Is that supposed to be art?!","Hurry up! ⏰","That doesn't look right...","Are you even trying?!",
+    "*judges silently* 👀","The foam is dying!","I could do better blindfolded!","Less thinking more pouring!",
+    "My patience has limits! 😡","Wrong tool maybe? 🧐","You're making me nervous! 😤","That's... interesting? 🤔"];
+  popup.innerHTML=`<img src="daniel.jpg" alt="Daniel"><div class="bubble">${msgs[Math.floor(Math.random()*msgs.length)]}</div>`;
+  document.body.appendChild(popup);setTimeout(()=>popup.remove(),2500);
 }
 
+// ===== RESIZE =====
 window.addEventListener('resize',()=>{
-  if(document.getElementById('gameArea').style.display!=='none')initCup();
+  if(document.getElementById('gameArea').style.display!=='none'){
+    // Save image data
+    const old=cupCtx.getImageData(0,0,cupSize,cupSize);
+    initCup();
+    // Restore — won't be perfect on resize but prevents full wipe
+    if(old.width===cupSize)cupCtx.putImageData(old,0,0);
+    if(currentPattern)drawGuidePattern(currentPattern,.15);
+  }
 });
 </script>
 </body>
