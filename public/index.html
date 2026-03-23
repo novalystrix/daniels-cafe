@@ -3,1132 +3,792 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Daniel's Cafe ☕ - Latte Art Master</title>
+<title>Daniel's Cafe ☕ Latte Art Academy</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { 
-  overflow: hidden; 
-  background: #1a0e08;
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  touch-action: none;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  height: 100dvh;
-}
+*{margin:0;padding:0;box-sizing:border-box}
+body{overflow:hidden;background:#1a0e08;font-family:'Segoe UI',system-ui,sans-serif;touch-action:none;user-select:none;height:100vh;height:100dvh}
 
-/* === SCREENS === */
-.screen {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  z-index: 100; transition: opacity 0.4s;
-}
-.screen.hidden { opacity: 0; pointer-events: none; }
+/* SCREENS */
+.screen{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;transition:opacity .4s}
+.screen.hidden{opacity:0;pointer-events:none}
+#startScreen{background:radial-gradient(ellipse at center,#3c1e0e 0%,#1a0e08 70%)}
+.title{font-size:2.4em;color:#f4d03f;text-shadow:2px 2px 0 #1a0e08;margin-bottom:5px;text-align:center}
+.subtitle{font-size:.95em;color:#c4956a;margin-bottom:20px;text-align:center;padding:0 30px;line-height:1.5}
+.face-preview{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #f4d03f;margin-bottom:15px;animation:bob 2.5s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.btn{padding:14px 40px;font-size:1.2em;border:none;border-radius:50px;cursor:pointer;font-weight:bold;transition:transform .15s;margin:5px}
+.btn:active{transform:scale(.95)}
+.btn-gold{background:linear-gradient(135deg,#f4d03f,#d4a017);color:#1a0e08;box-shadow:0 4px 20px rgba(244,208,63,.3)}
+.btn-outline{background:transparent;border:2px solid #c4956a;color:#c4956a}
+.btn-red{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff}
+.btn-sm{padding:10px 24px;font-size:1em}
 
-#startScreen {
-  background: radial-gradient(ellipse at center, #3c1e0e 0%, #1a0e08 70%);
-}
-#resultScreen {
-  background: rgba(26, 14, 8, 0.95);
-}
+/* PATTERN SELECT */
+#selectScreen{background:radial-gradient(ellipse at center,#3c1e0e 0%,#1a0e08 70%)}
+.pattern-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 20px;max-width:400px;width:100%;margin-bottom:20px}
+.pattern-card{background:rgba(60,30,14,.8);border:2px solid #3c2415;border-radius:16px;padding:14px;text-align:center;cursor:pointer;transition:all .2s}
+.pattern-card:active{transform:scale(.96)}
+.pattern-card.locked{opacity:.4;pointer-events:none}
+.pattern-card .p-icon{font-size:2.2em;margin-bottom:4px}
+.pattern-card .p-name{color:#f4d03f;font-size:1em;font-weight:bold}
+.pattern-card .p-diff{color:#c4956a;font-size:.75em;margin-top:2px}
+.pattern-card .p-stars{color:#f4d03f;font-size:.8em;margin-top:4px}
+.pattern-card.mastered{border-color:#2ecc71}
 
-.title {
-  font-size: 2.6em;
-  color: #f4d03f;
-  text-shadow: 2px 2px 0 #1a0e08, 0 0 30px rgba(244,208,63,0.2);
-  margin-bottom: 5px;
-  text-align: center;
-}
-.subtitle {
-  font-size: 1em;
-  color: #c4956a;
-  margin-bottom: 25px;
-  text-align: center;
-  padding: 0 30px;
-  line-height: 1.5;
-}
-.face-preview {
-  width: 100px; height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #f4d03f;
-  margin-bottom: 15px;
-  animation: bob 2.5s ease-in-out infinite;
-}
-@keyframes bob {
-  0%, 100% { transform: translateY(0) rotate(-2deg); }
-  50% { transform: translateY(-8px) rotate(2deg); }
-}
-.btn {
-  padding: 14px 44px;
-  font-size: 1.3em;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: transform 0.15s;
-  margin: 6px;
-}
-.btn:active { transform: scale(0.95); }
-.btn-gold {
-  background: linear-gradient(135deg, #f4d03f, #d4a017);
-  color: #1a0e08;
-  box-shadow: 0 4px 20px rgba(244,208,63,0.3);
-}
-.btn-red {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
-  color: white;
-}
-
-/* === GAME AREA === */
-#gameArea {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  display: none;
-}
-
-/* Cup */
-#cupCanvas {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  cursor: crosshair;
-}
+/* GAME */
+#gameArea{position:relative;width:100vw;height:100vh;height:100dvh;display:none;overflow:hidden}
+#cupCanvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);cursor:crosshair;z-index:5}
+#guideCanvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:10}
 
 /* HUD */
-#hud {
-  position: fixed; top: 0; left: 0; width: 100%;
-  padding: 8px 14px;
-  display: flex; justify-content: space-between; align-items: center;
-  z-index: 50;
-  background: linear-gradient(180deg, rgba(26,14,8,0.9) 0%, transparent 100%);
-}
-.hud-item {
-  color: #f4d03f;
-  font-size: 0.95em;
-  font-weight: bold;
-  text-shadow: 1px 1px 2px #000;
-}
+#hud{position:fixed;top:0;left:0;width:100%;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;z-index:50;background:linear-gradient(180deg,rgba(26,14,8,.92)0%,transparent 100%)}
+.hud-item{color:#f4d03f;font-size:.9em;font-weight:bold;text-shadow:1px 1px 2px #000}
+#timerBar{position:fixed;top:42px;left:0;width:100%;height:4px;background:rgba(255,255,255,.08);z-index:50}
+#timerFill{height:100%;background:linear-gradient(90deg,#2ecc71,#f4d03f,#e74c3c);width:100%;transition:width .1s linear}
 
-/* Order card */
-#orderCard {
-  position: fixed;
-  top: 55px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(60, 30, 14, 0.9);
-  border: 1px solid #5a3d2a;
-  border-radius: 12px;
-  padding: 8px 16px;
-  z-index: 50;
-  text-align: center;
-  backdrop-filter: blur(10px);
-}
-.order-name {
-  color: #f4d03f;
-  font-size: 1em;
-  font-weight: bold;
-}
-.order-hint {
-  color: #c4956a;
-  font-size: 0.8em;
-  margin-top: 2px;
-}
+/* STEP PANEL */
+#stepPanel{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:50;background:rgba(26,14,8,.92);border:1px solid #3c2415;border-radius:16px;padding:12px 18px;text-align:center;backdrop-filter:blur(10px);max-width:90vw;width:320px;transition:all .3s}
+#stepPanel.minimized{bottom:75px;padding:6px 14px;border-radius:20px;width:auto}
+.step-title{color:#f4d03f;font-size:.95em;font-weight:bold;margin-bottom:4px}
+.step-desc{color:#ddc;font-size:.85em;line-height:1.4}
+.step-progress{display:flex;gap:6px;justify-content:center;margin-top:8px}
+.step-dot{width:10px;height:10px;border-radius:50%;background:#3c2415;border:1px solid #5a3d2a;transition:all .3s}
+.step-dot.done{background:#2ecc71;border-color:#2ecc71}
+.step-dot.active{background:#f4d03f;border-color:#f4d03f;transform:scale(1.2)}
+.step-sub{color:#c4956a;font-size:.75em;margin-top:4px;font-style:italic}
 
-/* Timer bar */
-#timerBar {
-  position: fixed;
-  top: 44px;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: rgba(255,255,255,0.1);
-  z-index: 50;
-}
-#timerFill {
-  height: 100%;
-  background: linear-gradient(90deg, #2ecc71, #f4d03f, #e74c3c);
-  transition: width 0.1s linear;
-  width: 100%;
-}
+/* TOOLBAR */
+#toolbar{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:50;background:rgba(26,14,8,.88);padding:8px 14px;border-radius:30px;border:1px solid #3c2415;backdrop-filter:blur(10px)}
+.tool-btn{width:44px;height:44px;border-radius:50%;border:2px solid #5a3d2a;background:#2c1810;font-size:1.3em;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;position:relative}
+.tool-btn.active{border-color:#f4d03f;background:#3c2415;box-shadow:0 0 10px rgba(244,208,63,.3)}
+.tool-btn:active{transform:scale(.9)}
+.tool-btn .tool-label{position:absolute;bottom:-15px;font-size:.55em;color:#c4956a;white-space:nowrap}
+.tool-btn.recommended{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 rgba(244,208,63,0)}50%{box-shadow:0 0 15px rgba(244,208,63,.5)}}
 
-/* Guide pattern overlay */
-#guideCanvas {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 10;
-  opacity: 0.25;
-}
+/* ANIMATED GUIDE ARROW */
+#guideArrow{position:absolute;z-index:20;pointer-events:none;width:24px;height:24px;transition:all .05s linear}
+#guideArrow::after{content:'';display:block;width:20px;height:20px;border-radius:50%;background:rgba(244,208,63,.6);box-shadow:0 0 12px rgba(244,208,63,.4);animation:arrowPulse 1s infinite}
+@keyframes arrowPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.3);opacity:1}}
 
-/* Daniel popup */
-.daniel-popup {
-  position: fixed;
-  z-index: 200;
-  animation: danielPop 2s forwards;
-  pointer-events: none;
-}
-.daniel-popup img {
-  width: 80px; height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #e74c3c;
-}
-.daniel-popup .bubble {
-  position: absolute;
-  bottom: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: white;
-  color: #1a0e08;
-  padding: 4px 10px;
-  border-radius: 10px;
-  font-size: 0.75em;
-  font-weight: bold;
-  white-space: nowrap;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
-@keyframes danielPop {
-  0% { opacity: 0; transform: scale(0.3) rotate(-20deg); }
-  15% { opacity: 1; transform: scale(1.1) rotate(5deg); }
-  25% { transform: scale(1) rotate(0deg); }
-  80% { opacity: 1; }
-  100% { opacity: 0; transform: scale(0.5) translateY(-40px); }
-}
+/* RESULT */
+#resultScreen{background:rgba(26,14,8,.95)}
+.result-score{font-size:4.5em;color:#f4d03f;font-weight:bold;text-shadow:0 0 30px rgba(244,208,63,.3)}
+.result-grade{font-size:1.6em;margin:5px 0 8px}
+.result-breakdown{color:#c4956a;font-size:.9em;line-height:1.8;margin-bottom:15px}
+.result-daniel img{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #f4d03f}
+.result-quote{color:#e74c3c;font-style:italic;font-size:.95em;margin:8px 0 15px;padding:0 20px}
+.result-tip{background:rgba(46,204,113,.15);border:1px solid rgba(46,204,113,.3);border-radius:10px;padding:10px 16px;color:#aee8c0;font-size:.85em;margin:8px 20px 15px;line-height:1.4;text-align:left}
+.result-tip strong{color:#2ecc71}
 
-/* Pour stream */
-#pourIndicator {
-  position: fixed;
-  width: 6px;
-  background: linear-gradient(180deg, rgba(255,248,230,0.9), rgba(255,248,230,0.3));
-  border-radius: 3px;
-  pointer-events: none;
-  z-index: 15;
-  display: none;
-}
+/* COMPARE VIEW */
+.compare-row{display:flex;gap:10px;justify-content:center;margin:10px 0}
+.compare-item{text-align:center}
+.compare-item canvas{border-radius:50%;border:2px solid #3c2415}
+.compare-label{color:#c4956a;font-size:.75em;margin-top:4px}
 
-/* Toolbar */
-#toolbar {
-  position: fixed;
-  bottom: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-  z-index: 50;
-  background: rgba(26, 14, 8, 0.85);
-  padding: 8px 14px;
-  border-radius: 30px;
-  border: 1px solid #3c2415;
-  backdrop-filter: blur(10px);
-}
-.tool-btn {
-  width: 44px; height: 44px;
-  border-radius: 50%;
-  border: 2px solid #5a3d2a;
-  background: #2c1810;
-  font-size: 1.3em;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.15s;
-}
-.tool-btn.active {
-  border-color: #f4d03f;
-  background: #3c2415;
-  box-shadow: 0 0 10px rgba(244,208,63,0.3);
-}
-.tool-btn:active { transform: scale(0.9); }
+/* DANIEL POPUP */
+.daniel-popup{position:fixed;z-index:200;animation:danielPop 2.5s forwards;pointer-events:none}
+.daniel-popup img{width:70px;height:70px;border-radius:50%;object-fit:cover;border:3px solid #e74c3c}
+.daniel-popup .bubble{position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);background:#fff;color:#1a0e08;padding:4px 10px;border-radius:10px;font-size:.7em;font-weight:bold;white-space:nowrap;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+@keyframes danielPop{0%{opacity:0;transform:scale(.3)rotate(-20deg)}15%{opacity:1;transform:scale(1.1)rotate(5deg)}25%{transform:scale(1)rotate(0)}80%{opacity:1}100%{opacity:0;transform:translateY(-40px)scale(.5)}}
 
-/* Size indicator */
-.size-label {
-  color: #c4956a;
-  font-size: 0.7em;
-  position: absolute;
-  bottom: -14px;
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
-}
-
-/* Result */
-.result-score {
-  font-size: 5em;
-  color: #f4d03f;
-  font-weight: bold;
-  text-shadow: 0 0 30px rgba(244,208,63,0.3);
-}
-.result-grade {
-  font-size: 1.8em;
-  margin: 5px 0 10px;
-}
-.result-breakdown {
-  color: #c4956a;
-  font-size: 0.95em;
-  line-height: 1.8;
-  margin-bottom: 20px;
-}
-.result-daniel {
-  margin: 10px 0;
-}
-.result-daniel img {
-  width: 90px; height: 90px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #f4d03f;
-}
-.result-quote {
-  color: #e74c3c;
-  font-style: italic;
-  font-size: 1em;
-  margin: 8px 0 15px;
-  padding: 0 20px;
-}
-
-/* Streak */
-#streakDisplay {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 2em;
-  color: #f4d03f;
-  font-weight: bold;
-  text-shadow: 2px 2px 4px #000;
-  z-index: 200;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-/* Level card */
-#levelCard {
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 300;
-  text-align: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s;
-}
-#levelCard.show { opacity: 1; }
-#levelCard .level-num {
-  font-size: 4em;
-  color: #f4d03f;
-  font-weight: bold;
-  text-shadow: 0 0 40px rgba(244,208,63,0.4);
-}
-#levelCard .level-name {
-  font-size: 1.3em;
-  color: #c4956a;
-  margin-top: 5px;
-}
+/* LEVEL SPLASH */
+#levelSplash{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:300;background:rgba(26,14,8,.9);opacity:0;pointer-events:none;transition:opacity .4s}
+#levelSplash.show{opacity:1}
+.splash-icon{font-size:4em;margin-bottom:10px}
+.splash-name{font-size:2em;color:#f4d03f;font-weight:bold}
+.splash-diff{color:#c4956a;font-size:1em;margin-top:5px}
 </style>
 </head>
 <body>
 
-<!-- Start Screen -->
+<!-- START -->
 <div id="startScreen" class="screen">
   <img src="daniel.jpg" class="face-preview" alt="Daniel">
   <div class="title">☕ Daniel's Cafe</div>
-  <div class="subtitle">Master the art of latte art.<br>Pour, draw, and create — before time runs out.<br>But watch out... Daniel has opinions. 😤</div>
-  <button class="btn btn-gold" onclick="startGame()">START POURING</button>
+  <div class="subtitle">Latte Art Academy<br>Learn real latte art techniques step by step.<br>Master each pattern to unlock the next!</div>
+  <button class="btn btn-gold" onclick="showSelect()">START LEARNING</button>
 </div>
 
-<!-- Result Screen -->
+<!-- PATTERN SELECT -->
+<div id="selectScreen" class="screen hidden">
+  <div class="title" style="font-size:1.6em;margin-bottom:3px">Choose Your Art</div>
+  <div class="subtitle" style="margin-bottom:15px">Master patterns to unlock harder ones</div>
+  <div class="pattern-grid" id="patternGrid"></div>
+  <button class="btn btn-outline btn-sm" onclick="showStart()">← Back</button>
+</div>
+
+<!-- GAME -->
+<div id="gameArea">
+  <div id="hud">
+    <div class="hud-item" id="hudLeft">☕ Heart</div>
+    <div class="hud-item">Step <span id="stepNum">1</span>/<span id="stepTotal">4</span></div>
+    <div class="hud-item" id="hudRight">⭐ 0</div>
+  </div>
+  <div id="timerBar"><div id="timerFill"></div></div>
+  <canvas id="cupCanvas"></canvas>
+  <canvas id="guideCanvas"></canvas>
+  <div id="guideArrow" style="display:none"></div>
+  <div id="stepPanel">
+    <div class="step-title" id="stepTitle">Step 1</div>
+    <div class="step-desc" id="stepDesc"></div>
+    <div class="step-sub" id="stepSub"></div>
+    <div class="step-progress" id="stepDots"></div>
+  </div>
+  <div id="toolbar"></div>
+  <div id="levelSplash">
+    <div class="splash-icon" id="splashIcon"></div>
+    <div class="splash-name" id="splashName"></div>
+    <div class="splash-diff" id="splashDiff"></div>
+  </div>
+</div>
+
+<!-- RESULT -->
 <div id="resultScreen" class="screen hidden">
   <div class="result-daniel"><img src="daniel.jpg" alt="Daniel"></div>
   <div class="result-quote" id="resultQuote"></div>
   <div class="result-score" id="resultScore">0</div>
   <div class="result-grade" id="resultGrade"></div>
+  <div class="compare-row" id="compareRow"></div>
   <div class="result-breakdown" id="resultBreakdown"></div>
-  <button class="btn btn-gold" onclick="nextRound()">NEXT ORDER →</button>
-  <button class="btn btn-red" id="quitBtn" onclick="showFinal()" style="display:none;">SEE FINAL SCORE</button>
-</div>
-
-<!-- Final screen -->
-<div id="finalScreen" class="screen hidden">
-  <img src="daniel.jpg" class="face-preview" alt="Daniel">
-  <div class="title" id="finalTitle">SHIFT OVER</div>
-  <div class="result-score" id="finalTotalScore">0</div>
-  <div class="subtitle" id="finalMsg"></div>
-  <div class="result-breakdown" id="finalBreakdown"></div>
-  <button class="btn btn-gold" onclick="startGame()">NEW SHIFT ☕</button>
-</div>
-
-<!-- Game Area -->
-<div id="gameArea">
-  <div id="hud">
-    <div class="hud-item">☕ Round <span id="roundDisplay">1</span>/5</div>
-    <div class="hud-item">⭐ <span id="scoreDisplay">0</span></div>
-    <div class="hud-item" id="livesDisplay">❤️❤️❤️</div>
-  </div>
-  <div id="timerBar"><div id="timerFill"></div></div>
-  <div id="orderCard">
-    <div class="order-name" id="orderName">Heart</div>
-    <div class="order-hint" id="orderHint">Pour a classic heart shape</div>
-  </div>
-  <canvas id="cupCanvas"></canvas>
-  <canvas id="guideCanvas"></canvas>
-  <div id="pourIndicator"></div>
-  <div id="toolbar">
-    <button class="tool-btn active" data-tool="pour" title="Pour milk">🥛</button>
-    <button class="tool-btn" data-tool="drag" title="Drag/etch">🪡</button>
-    <button class="tool-btn" data-tool="thin" title="Thin stream">💧</button>
-    <button class="tool-btn" data-tool="shake" title="Wiggle pour">〰️</button>
-  </div>
-  <div id="streakDisplay"></div>
-  <div id="levelCard">
-    <div class="level-num" id="levelNum"></div>
-    <div class="level-name" id="levelName"></div>
+  <div class="result-tip" id="resultTip" style="display:none"></div>
+  <div style="display:flex;flex-wrap:wrap;justify-content:center">
+    <button class="btn btn-gold btn-sm" onclick="retryPattern()">Try Again</button>
+    <button class="btn btn-outline btn-sm" onclick="showSelect()">Other Patterns</button>
   </div>
 </div>
 
 <script>
-// ============ CONFIG ============
-const DANIEL_COMMENTS = {
-  terrible: [
-    "Did you sneeze into my cup?!", "I've seen better art from a broken machine!",
-    "Is this... abstract? Because it's abstractly terrible.", "My 3-year-old could do better!",
-    "You call THIS latte art?! I call it a crime.", "I'm posting this on social media... as a warning."
-  ],
-  bad: [
-    "Hmm... I think I see something? Maybe?", "It's giving... modern art nobody asked for.",
-    "Were you trying to draw something specific?", "I mean... points for effort? Not many though.",
-    "This is why I have trust issues with baristas."
-  ],
-  ok: [
-    "Not bad... I've seen worse. At YOUR cafe.", "It's recognizable! That's... something.",
-    "My grandmother would say it's nice. She's very polite.", "Getting there! Only took you how many tries?",
-    "I'll accept it. But I'm not happy about it."
-  ],
-  good: [
-    "Ok ok, I'm actually impressed.", "Now THAT'S what I'm talking about!",
-    "Finally! Someone who knows what they're doing!", "Beautiful! Almost as beautiful as me. Almost.",
-    "I'd post this on Instagram. With the right filter."
-  ],
-  perfect: [
-    "MAGNIFICENT! You're an artist!", "I... I think I'm going to cry. It's perfect.",
-    "*chef's kiss* Bellissimo!", "Can I hire you? Actually, can I marry this latte?",
-    "This belongs in a museum, not my stomach!"
-  ]
-};
-
+// ====== PATTERNS ======
 const PATTERNS = [
   {
-    name: "Heart",
-    hint: "Pour a classic heart — round base, pointed bottom",
-    difficulty: 1,
-    timeBonus: 0,
-    draw: (ctx, cx, cy, r) => {
+    id:'heart', name:'Heart', icon:'❤️', difficulty:1, unlockScore:0,
+    desc:'The foundation of latte art',
+    steps:[
+      {title:'Center Pour',desc:'Pour milk into the center of the cup in a steady stream.',sub:'Hold steady — build a white base in the middle.',tool:'pour',zone:{cx:.5,cy:.45,r:.15},duration:6000},
+      {title:'Push Forward',desc:'Slowly push the pour toward the top of the cup.',sub:'Move smoothly upward while pouring.',tool:'pour',zone:{cx:.5,cy:.3,r:.18},duration:5000},
+      {title:'Strike Through',desc:'Quick thin line from top to bottom through the center.',sub:'One confident stroke down the middle!',tool:'thin',zone:{cx:.5,cy:.5,r:.08,isLine:true,from:{x:.5,y:.2},to:{x:.5,y:.7}},duration:4000}
+    ],
+    buildGuide:(ctx,cx,cy,r)=>{
+      const s=r*.7;
       ctx.beginPath();
-      const s = r * 0.7;
-      ctx.moveTo(cx, cy + s * 0.7);
-      ctx.bezierCurveTo(cx, cy + s * 0.3, cx - s, cy - s * 0.1, cx - s, cy - s * 0.4);
-      ctx.bezierCurveTo(cx - s, cy - s * 0.85, cx - s * 0.35, cy - s, cx, cy - s * 0.55);
-      ctx.bezierCurveTo(cx + s * 0.35, cy - s, cx + s, cy - s * 0.85, cx + s, cy - s * 0.4);
-      ctx.bezierCurveTo(cx + s, cy - s * 0.1, cx, cy + s * 0.3, cx, cy + s * 0.7);
+      for(let t=0;t<=1;t+=.01){
+        const a=t*Math.PI*2;
+        const x=16*Math.pow(Math.sin(a),3);
+        const y=-(13*Math.cos(a)-5*Math.cos(2*a)-2*Math.cos(3*a)-Math.cos(4*a));
+        const px=cx+x*s/17,py=cy+y*s/17-s*.1;
+        t===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      }
       ctx.closePath();
     },
-    getPoints: (cx, cy, r) => {
-      const pts = [];
-      const s = r * 0.7;
-      for (let t = 0; t <= 1; t += 0.02) {
-        const a = t * Math.PI * 2;
-        const x = 16 * Math.pow(Math.sin(a), 3);
-        const y = -(13 * Math.cos(a) - 5 * Math.cos(2*a) - 2 * Math.cos(3*a) - Math.cos(4*a));
-        pts.push({ x: cx + x * s / 17, y: cy + y * s / 17 - s * 0.1 });
+    getTargetPixels:(cx,cy,r)=>{
+      const pts=[];const s=r*.7;
+      for(let t=0;t<=1;t+=.005){
+        const a=t*Math.PI*2;
+        const x=16*Math.pow(Math.sin(a),3);
+        const y=-(13*Math.cos(a)-5*Math.cos(2*a)-2*Math.cos(3*a)-Math.cos(4*a));
+        pts.push({x:cx+x*s/17,y:cy+y*s/17-s*.1});
       }
+      // Fill interior points
+      for(let fy=-s;fy<s;fy+=4){for(let fx=-s;fx<s;fx+=4){
+        const px=cx+fx,py=cy+fy-s*.1;
+        const nx=fx*17/s,ny=-(fy)*17/s;
+        const t=Math.atan2(nx,ny<0?ny+1:ny)/(Math.PI*2);
+        const heartX=16*Math.pow(Math.sin(t*Math.PI*2),3);
+        const heartR=Math.sqrt(nx*nx+ny*ny);
+        const heartEdge=Math.sqrt(heartX*heartX+(-(13*Math.cos(t*Math.PI*2)-5*Math.cos(2*t*Math.PI*2)-2*Math.cos(3*t*Math.PI*2)-Math.cos(4*t*Math.PI*2)))**2);
+        if(heartR<heartEdge*.85)pts.push({x:px,y:py});
+      }}
       return pts;
     }
   },
   {
-    name: "Rosetta",
-    hint: "Wiggle side-to-side while pulling down, then strike through",
-    difficulty: 2,
-    timeBonus: 5,
-    draw: (ctx, cx, cy, r) => {
-      const s = r * 0.65;
+    id:'tulip', name:'Tulip', icon:'🌷', difficulty:2, unlockScore:40,
+    desc:'Three stacked pours with a pull-through',
+    steps:[
+      {title:'Bottom Circle',desc:'Pour a wide circle at the bottom of the cup.',sub:'Make it the biggest of the three.',tool:'pour',zone:{cx:.5,cy:.62,r:.18},duration:5000},
+      {title:'Middle Circle',desc:'Pour a medium circle just above the first.',sub:'Slightly smaller — let it push into the bottom one.',tool:'pour',zone:{cx:.5,cy:.45,r:.15},duration:5000},
+      {title:'Top Circle',desc:'Pour a small circle at the top.',sub:'The smallest of the three.',tool:'pour',zone:{cx:.5,cy:.3,r:.12},duration:4000},
+      {title:'Pull Through',desc:'Drag a thin line from top through all three circles.',sub:'One clean stroke — this creates the tulip shape!',tool:'thin',zone:{cx:.5,cy:.5,r:.06,isLine:true,from:{x:.5,y:.2},to:{x:.5,y:.75}},duration:4000}
+    ],
+    buildGuide:(ctx,cx,cy,r)=>{
+      const s=r*.55;
+      ctx.beginPath();ctx.ellipse(cx,cy+s*.7,s*.7,s*.45,0,0,Math.PI*2);
+      ctx.moveTo(cx+s*.55,cy);ctx.ellipse(cx,cy,s*.55,s*.38,0,0,Math.PI*2);
+      ctx.moveTo(cx+s*.38,cy-s*.6);ctx.ellipse(cx,cy-s*.6,s*.38,s*.3,0,0,Math.PI*2);
+      ctx.moveTo(cx,cy-s*.9);ctx.lineTo(cx,cy+s*1.15);
+    },
+    getTargetPixels:(cx,cy,r)=>{
+      const pts=[];const s=r*.55;
+      [{y:.7,rx:.7,ry:.45},{y:0,rx:.55,ry:.38},{y:-.6,rx:.38,ry:.3}].forEach(c=>{
+        for(let a=0;a<Math.PI*2;a+=.08){
+          for(let d=0;d<=1;d+=.15){
+            pts.push({x:cx+Math.cos(a)*s*c.rx*d,y:cy+s*c.y+Math.sin(a)*s*c.ry*d});
+          }
+        }
+      });
+      for(let t=0;t<=1;t+=.02)pts.push({x:cx,y:cy-s*.9+t*s*2.05});
+      return pts;
+    }
+  },
+  {
+    id:'rosetta', name:'Rosetta', icon:'🌿', difficulty:2, unlockScore:40,
+    desc:'The classic fern — wiggle while pulling back',
+    steps:[
+      {title:'Start Wide',desc:'Begin pouring at the top of the cup with a wide stream.',sub:'Create a base — pour and hold.',tool:'pour',zone:{cx:.5,cy:.3,r:.18},duration:4000},
+      {title:'Wiggle Down',desc:'Shake side to side while slowly moving down.',sub:'Even, rhythmic wiggles — this creates the leaves!',tool:'shake',zone:{cx:.5,cy:.5,r:.25},duration:8000},
+      {title:'Thin Tail',desc:'End with a thin tail at the bottom.',sub:'Narrow your pour as you reach the bottom.',tool:'thin',zone:{cx:.5,cy:.72,r:.1},duration:3000},
+      {title:'Strike Through',desc:'Pull a thin line from bottom to top through the center.',sub:'This defines the stem and separates the leaves!',tool:'thin',zone:{cx:.5,cy:.5,r:.06,isLine:true,from:{x:.5,y:.78},to:{x:.5,y:.22}},duration:4000}
+    ],
+    buildGuide:(ctx,cx,cy,r)=>{
+      const s=r*.65;
       ctx.beginPath();
-      // Leaf shape
-      for (let i = 0; i <= 40; i++) {
-        const t = i / 40;
-        const y = cy - s + t * s * 2;
-        const width = Math.sin(t * Math.PI) * s * 0.7;
-        if (i === 0) ctx.moveTo(cx, y);
-        else {
-          const wiggle = Math.sin(t * Math.PI * 8) * width * 0.3;
-          ctx.lineTo(cx + wiggle + (t < 0.5 ? width * 0.4 : width * 0.4 * (1 - (t-0.5)*2)), y);
+      ctx.moveTo(cx,cy+s);
+      ctx.bezierCurveTo(cx-s*.7,cy+s*.3,cx-s*.5,cy-s*.6,cx,cy-s);
+      ctx.bezierCurveTo(cx+s*.5,cy-s*.6,cx+s*.7,cy+s*.3,cx,cy+s);
+      ctx.moveTo(cx,cy-s);ctx.lineTo(cx,cy+s);
+      for(let i=0;i<6;i++){
+        const t=.15+i*.13;const y2=cy+s-t*s*2;const sp=(1-t*.7)*s*.55;
+        ctx.moveTo(cx,y2);ctx.lineTo(cx-sp,y2-s*.1);
+        ctx.moveTo(cx,y2);ctx.lineTo(cx+sp,y2-s*.1);
+      }
+    },
+    getTargetPixels:(cx,cy,r)=>{
+      const pts=[];const s=r*.65;
+      for(let t=0;t<=1;t+=.01){
+        const y2=cy+s-t*s*2;const w=Math.sin(t*Math.PI)*s*.5;
+        const wig=Math.sin(t*Math.PI*8)*w*.5;
+        pts.push({x:cx+wig,y:y2});pts.push({x:cx-wig*.3,y:y2});pts.push({x:cx+wig*.3,y:y2});
+      }
+      for(let t=0;t<=1;t+=.02)pts.push({x:cx,y:cy-s+t*s*2});
+      return pts;
+    }
+  },
+  {
+    id:'swan', name:'Swan', icon:'🦢', difficulty:3, unlockScore:65,
+    desc:'The ultimate flex — a swan with neck and body',
+    steps:[
+      {title:'Body Base',desc:'Pour a large oval for the swan body (lower right area).',sub:'This is the biggest element — take your time.',tool:'pour',zone:{cx:.55,cy:.55,r:.22},duration:6000},
+      {title:'Wing Detail',desc:'Add texture inside the body with gentle wiggles.',sub:'Small side-to-side motions inside the oval.',tool:'shake',zone:{cx:.55,cy:.55,r:.18},duration:5000},
+      {title:'Neck Curve',desc:'Draw a graceful S-curve up and to the left.',sub:'Start from the body, curve up — this is the neck!',tool:'thin',zone:{cx:.35,cy:.35,r:.2,isLine:true,from:{x:.45,y:.5},to:{x:.3,y:.2}},duration:6000},
+      {title:'Head & Beak',desc:'Finish with a small curve at the top for the head.',sub:'A tiny hook to the right — that\'s the beak!',tool:'drag',zone:{cx:.32,cy:.22,r:.08},duration:4000}
+    ],
+    buildGuide:(ctx,cx,cy,r)=>{
+      const s=r*.6;
+      ctx.beginPath();ctx.ellipse(cx+s*.1,cy+s*.3,s*.75,s*.5,.1,0,Math.PI*2);
+      ctx.moveTo(cx-s*.5,cy+s*.1);
+      ctx.bezierCurveTo(cx-s*.9,cy-s*.3,cx-s*.7,cy-s*1.1,cx-s*.2,cy-s*.9);
+      ctx.bezierCurveTo(cx,cy-s*.85,cx-s*.05,cy-s*.7,cx-s*.3,cy-s*.65);
+    },
+    getTargetPixels:(cx,cy,r)=>{
+      const pts=[];const s=r*.6;
+      for(let a=0;a<Math.PI*2;a+=.06){
+        for(let d=.3;d<=1;d+=.15){
+          pts.push({x:cx+s*.1+Math.cos(a+.1)*s*.75*d,y:cy+s*.3+Math.sin(a+.1)*s*.5*d});
         }
       }
-      for (let i = 40; i >= 0; i--) {
-        const t = i / 40;
-        const y = cy - s + t * s * 2;
-        const width = Math.sin(t * Math.PI) * s * 0.7;
-        const wiggle = Math.sin(t * Math.PI * 8) * width * 0.3;
-        ctx.lineTo(cx + wiggle - (t < 0.5 ? width * 0.4 : width * 0.4 * (1 - (t-0.5)*2)), y);
-      }
-      ctx.closePath();
-      // Stem
-      ctx.moveTo(cx, cy - s);
-      ctx.lineTo(cx, cy + s);
-    },
-    getPoints: (cx, cy, r) => {
-      const pts = [];
-      const s = r * 0.65;
-      // Wiggle down
-      for (let t = 0; t <= 1; t += 0.015) {
-        const y = cy - s + t * s * 2;
-        const width = Math.sin(t * Math.PI) * s * 0.5;
-        const wiggle = Math.sin(t * Math.PI * 8) * width * 0.6;
-        pts.push({ x: cx + wiggle, y });
-      }
-      // Strike through
-      for (let t = 0; t <= 1; t += 0.03) {
-        pts.push({ x: cx, y: cy - s + t * s * 2 });
+      for(let t=0;t<=1;t+=.02){
+        const x=Math.pow(1-t,3)*(cx-s*.5)+3*Math.pow(1-t,2)*t*(cx-s*.9)+3*(1-t)*t*t*(cx-s*.7)+t*t*t*(cx-s*.2);
+        const y=Math.pow(1-t,3)*(cy+s*.1)+3*Math.pow(1-t,2)*t*(cy-s*.3)+3*(1-t)*t*t*(cy-s*1.1)+t*t*t*(cy-s*.9);
+        pts.push({x,y});
       }
       return pts;
     }
   },
   {
-    name: "Tulip",
-    hint: "Pour 3 stacked circles, smallest on top, then pull through",
-    difficulty: 2,
-    timeBonus: 5,
-    draw: (ctx, cx, cy, r) => {
-      const s = r * 0.55;
-      // Three stacked circles
-      ctx.beginPath();
-      ctx.ellipse(cx, cy + s * 0.7, s * 0.7, s * 0.45, 0, 0, Math.PI * 2);
-      ctx.moveTo(cx + s * 0.55, cy);
-      ctx.ellipse(cx, cy, s * 0.55, s * 0.38, 0, 0, Math.PI * 2);
-      ctx.moveTo(cx + s * 0.38, cy - s * 0.6);
-      ctx.ellipse(cx, cy - s * 0.6, s * 0.38, s * 0.3, 0, 0, Math.PI * 2);
-      // Stem up
-      ctx.moveTo(cx, cy - s * 0.9);
-      ctx.lineTo(cx, cy - s * 1.3);
+    id:'bear', name:'Bear Face', icon:'🐻', difficulty:3, unlockScore:65,
+    desc:'A cute bear face — crowd favorite!',
+    steps:[
+      {title:'Face Base',desc:'Pour a big circle in the center for the face.',sub:'Fill it evenly — this is the main face.',tool:'pour',zone:{cx:.5,cy:.5,r:.22},duration:6000},
+      {title:'Left Ear',desc:'Add a small circle on the upper left.',sub:'Round and cute — bear ears are small!',tool:'pour',zone:{cx:.35,cy:.28,r:.09},duration:4000},
+      {title:'Right Ear',desc:'Add a small circle on the upper right.',sub:'Match the left ear — symmetry matters!',tool:'pour',zone:{cx:.65,cy:.28,r:.09},duration:4000},
+      {title:'Eyes & Nose',desc:'Use the etching tool to draw two dot eyes and a triangle nose.',sub:'Poke two dots for eyes, drag a small V for the nose.',tool:'drag',zone:{cx:.5,cy:.48,r:.18},duration:8000},
+      {title:'Mouth',desc:'Etch a small curved smile below the nose.',sub:'A tiny U shape — make it cute!',tool:'drag',zone:{cx:.5,cy:.58,r:.1},duration:4000}
+    ],
+    buildGuide:(ctx,cx,cy,r)=>{
+      const s=r*.6;
+      ctx.beginPath();ctx.arc(cx,cy+s*.05,s*.7,0,Math.PI*2);
+      ctx.moveTo(cx-s*.55+s*.28,cy-s*.5);ctx.arc(cx-s*.55,cy-s*.5,s*.28,0,Math.PI*2);
+      ctx.moveTo(cx+s*.55+s*.28,cy-s*.5);ctx.arc(cx+s*.55,cy-s*.5,s*.28,0,Math.PI*2);
+      // Eyes
+      ctx.moveTo(cx-s*.25+s*.08,cy-.05*s);ctx.arc(cx-s*.25,cy-s*.05,s*.08,0,Math.PI*2);
+      ctx.moveTo(cx+s*.25+s*.08,cy-s*.05);ctx.arc(cx+s*.25,cy-s*.05,s*.08,0,Math.PI*2);
+      // Nose
+      ctx.moveTo(cx,cy+s*.12);ctx.lineTo(cx-s*.1,cy+s*.25);ctx.lineTo(cx+s*.1,cy+s*.25);ctx.closePath();
+      // Mouth
+      ctx.moveTo(cx-s*.12,cy+s*.32);
+      ctx.quadraticCurveTo(cx,cy+s*.45,cx+s*.12,cy+s*.32);
     },
-    getPoints: (cx, cy, r) => {
-      const pts = [];
-      const s = r * 0.55;
-      // Bottom circle
-      for (let a = 0; a < Math.PI * 2; a += 0.15) {
-        pts.push({ x: cx + Math.cos(a) * s * 0.7, y: cy + s * 0.7 + Math.sin(a) * s * 0.45 });
-      }
-      // Middle
-      for (let a = 0; a < Math.PI * 2; a += 0.15) {
-        pts.push({ x: cx + Math.cos(a) * s * 0.55, y: cy + Math.sin(a) * s * 0.38 });
-      }
-      // Top
-      for (let a = 0; a < Math.PI * 2; a += 0.15) {
-        pts.push({ x: cx + Math.cos(a) * s * 0.38, y: cy - s * 0.6 + Math.sin(a) * s * 0.3 });
-      }
-      // Stem
-      for (let t = 0; t <= 1; t += 0.05) {
-        pts.push({ x: cx, y: cy - s * 0.9 - t * s * 0.4 });
-      }
-      return pts;
-    }
-  },
-  {
-    name: "Swan",
-    hint: "A curving neck with a round body — the ultimate flex",
-    difficulty: 3,
-    timeBonus: 10,
-    draw: (ctx, cx, cy, r) => {
-      const s = r * 0.6;
-      // Body
-      ctx.beginPath();
-      ctx.ellipse(cx + s * 0.1, cy + s * 0.3, s * 0.75, s * 0.5, 0.1, 0, Math.PI * 2);
-      // Neck
-      ctx.moveTo(cx - s * 0.5, cy + s * 0.1);
-      ctx.bezierCurveTo(cx - s * 0.9, cy - s * 0.3, cx - s * 0.7, cy - s * 1.1, cx - s * 0.2, cy - s * 0.9);
-      ctx.bezierCurveTo(cx, cy - s * 0.85, cx - s * 0.05, cy - s * 0.7, cx - s * 0.3, cy - s * 0.65);
-    },
-    getPoints: (cx, cy, r) => {
-      const pts = [];
-      const s = r * 0.6;
-      // Body outline
-      for (let a = 0; a < Math.PI * 2; a += 0.1) {
-        pts.push({ x: cx + s * 0.1 + Math.cos(a) * s * 0.75, y: cy + s * 0.3 + Math.sin(a) * s * 0.5 });
-      }
-      // Neck curve
-      for (let t = 0; t <= 1; t += 0.03) {
-        const t2 = t;
-        const x = Math.pow(1-t2,3)*(cx-s*0.5) + 3*Math.pow(1-t2,2)*t2*(cx-s*0.9) + 3*(1-t2)*t2*t2*(cx-s*0.7) + t2*t2*t2*(cx-s*0.2);
-        const y = Math.pow(1-t2,3)*(cy+s*0.1) + 3*Math.pow(1-t2,2)*t2*(cy-s*0.3) + 3*(1-t2)*t2*t2*(cy-s*1.1) + t2*t2*t2*(cy-s*0.9);
-        pts.push({ x, y });
-      }
-      return pts;
-    }
-  },
-  {
-    name: "Fern Leaf",
-    hint: "Detailed leaf veins — steady hand required!",
-    difficulty: 3,
-    timeBonus: 10,
-    draw: (ctx, cx, cy, r) => {
-      const s = r * 0.7;
-      // Main stem
-      ctx.beginPath();
-      ctx.moveTo(cx, cy + s);
-      ctx.lineTo(cx, cy - s);
-      // Side veins
-      for (let i = 0; i < 6; i++) {
-        const t = 0.15 + i * 0.13;
-        const y = cy + s - t * s * 2;
-        const spread = (1 - t * 0.7) * s * 0.6;
-        ctx.moveTo(cx, y);
-        ctx.lineTo(cx - spread, y - s * 0.12);
-        ctx.moveTo(cx, y);
-        ctx.lineTo(cx + spread, y - s * 0.12);
-      }
-      // Leaf outline
-      ctx.moveTo(cx, cy + s);
-      ctx.bezierCurveTo(cx - s * 0.7, cy + s * 0.3, cx - s * 0.5, cy - s * 0.6, cx, cy - s);
-      ctx.bezierCurveTo(cx + s * 0.5, cy - s * 0.6, cx + s * 0.7, cy + s * 0.3, cx, cy + s);
-    },
-    getPoints: (cx, cy, r) => {
-      const pts = [];
-      const s = r * 0.7;
-      // Stem
-      for (let t = 0; t <= 1; t += 0.02) {
-        pts.push({ x: cx, y: cy + s - t * s * 2 });
-      }
-      // Veins
-      for (let i = 0; i < 6; i++) {
-        const t = 0.15 + i * 0.13;
-        const y = cy + s - t * s * 2;
-        const spread = (1 - t * 0.7) * s * 0.6;
-        for (let v = 0; v <= 1; v += 0.1) {
-          pts.push({ x: cx - v * spread, y: y - v * s * 0.12 });
-          pts.push({ x: cx + v * spread, y: y - v * s * 0.12 });
-        }
-      }
-      // Outline
-      for (let t = 0; t <= 1; t += 0.02) {
-        const a = t * Math.PI * 2;
-        const rx = Math.sin(a) * s * 0.55;
-        const ry = -s + t * s * 2;
-        pts.push({ x: cx + rx * (t < 0.5 ? 1 : -1), y: cy + Math.cos(a) * s });
-      }
+    getTargetPixels:(cx,cy,r)=>{
+      const pts=[];const s=r*.6;
+      for(let a=0;a<Math.PI*2;a+=.05){for(let d=.2;d<=1;d+=.15){
+        pts.push({x:cx+Math.cos(a)*s*.7*d,y:cy+s*.05+Math.sin(a)*s*.7*d});
+      }}
+      [{x:-.55,y:-.5,r:.28},{x:.55,y:-.5,r:.28}].forEach(e=>{
+        for(let a=0;a<Math.PI*2;a+=.15){for(let d=.3;d<=1;d+=.2){
+          pts.push({x:cx+s*e.x+Math.cos(a)*s*e.r*d,y:cy+s*e.y+Math.sin(a)*s*e.r*d});
+        }}
+      });
       return pts;
     }
   }
 ];
 
-// ============ GAME STATE ============
-let cupSize, cupCx, cupCy, cupRadius;
-let cupCtx, guideCtx;
-let drawing = false;
-let currentTool = 'pour';
-let brushSize = 12;
-let pourPoints = [];
-let score = 0;
-let round = 0;
-let totalRounds = 5;
-let lives = 3;
-let timeLeft, maxTime, timerInterval;
-let currentPattern = null;
-let danielTimer = null;
-let streakCount = 0;
-let roundScores = [];
-let shakePhase = 0;
+// ====== TOOL DEFS ======
+const TOOLS = {
+  pour:{emoji:'🥛',label:'Pour',size:16,color:'rgba(255,248,230,.85)',shadow:true},
+  thin:{emoji:'💧',label:'Thin',size:5,color:'rgba(255,248,235,.8)',shadow:false},
+  shake:{emoji:'〰️',label:'Wiggle',size:18,color:'rgba(255,248,230,.8)',shadow:true,wiggle:true},
+  drag:{emoji:'🪡',label:'Etch',size:3,color:'rgba(58,30,16,.7)',shadow:false,isDrag:true}
+};
 
-// ============ INIT ============
-function initCup() {
-  const canvas = document.getElementById('cupCanvas');
-  const guide = document.getElementById('guideCanvas');
-  cupCtx = canvas.getContext('2d');
-  guideCtx = guide.getContext('2d');
-  
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  cupSize = Math.min(vw * 0.85, vh * 0.55, 380);
-  cupRadius = cupSize / 2;
-  
-  canvas.width = canvas.height = cupSize;
-  guide.width = guide.height = cupSize;
-  cupCx = cupSize / 2;
-  cupCy = cupSize / 2;
-  
-  drawEmptyCup();
+// ====== DANIEL ======
+const DANIEL_COMMENTS={
+  terrible:["Did you sneeze into my cup?!","I've seen better art from a broken machine!","Is this abstract? Because it's abstractly terrible.","My 3-year-old could do better!"],
+  bad:["Hmm... I think I see something? Maybe?","Were you trying to draw something specific?","Points for effort? Not many though."],
+  ok:["Not bad... I've seen worse.","It's recognizable! That's something.","Getting there! Practice more."],
+  good:["Ok ok, I'm actually impressed!","Now THAT'S what I'm talking about!","I'd post this on Instagram."],
+  perfect:["MAGNIFICENT! You're an artist!","*chef's kiss* Bellissimo!","Can I hire you? Actually, can I marry this latte?"]
+};
+const TIPS={
+  heart:["Try pouring slower and steadier in the center","Push the pour forward more before the strike-through","Make the strike-through one confident motion — don't hesitate"],
+  tulip:["Make each circle distinctly different in size","Let each pour push into the one below it","The pull-through should be straight and centered"],
+  rosetta:["Keep your wiggles even and rhythmic","Start wide at the top, narrow toward the bottom","The strike-through defines the whole shape — make it count"],
+  swan:["The body should be a smooth oval, not a circle","The neck curve needs to be one fluid S-motion","Keep the head small — less is more"],
+  bear:["Symmetry is key — ears should mirror each other","The face should be round, not oval","Light touches for the eyes — don't overdo it"]
+};
+
+// ====== STATE ======
+let cupSize,cupCx,cupCy,cupR,cupCtx,guideCtx;
+let drawing=false,currentTool='pour',pourPoints=[];
+let shakePhase=0,currentPattern=null,currentStep=0;
+let timeLeft,maxTime,timerInterval,danielTimer,guideAnimTimer;
+let bestScores=JSON.parse(localStorage.getItem('dc_scores')||'{}');
+let totalStars=Object.values(bestScores).reduce((a,b)=>a+b,0);
+
+// ====== SCREENS ======
+function showStart(){
+  hideAll();document.getElementById('startScreen').classList.remove('hidden');
+}
+function showSelect(){
+  hideAll();
+  totalStars=Object.values(bestScores).reduce((a,b)=>a+b,0);
+  const grid=document.getElementById('patternGrid');
+  grid.innerHTML='';
+  PATTERNS.forEach(p=>{
+    const unlocked=totalStars>=p.unlockScore;
+    const best=bestScores[p.id]||0;
+    const stars=best>=85?3:best>=60?2:best>=35?1:0;
+    const card=document.createElement('div');
+    card.className='pattern-card'+(unlocked?'':' locked')+(stars>=3?' mastered':'');
+    card.innerHTML=`
+      <div class="p-icon">${p.icon}</div>
+      <div class="p-name">${p.name}</div>
+      <div class="p-diff">${'⭐'.repeat(p.difficulty)} ${unlocked?'':'🔒 Need '+p.unlockScore+' pts'}</div>
+      <div class="p-stars">${stars>0?'★'.repeat(stars)+'☆'.repeat(3-stars):'☆☆☆'}</div>
+    `;
+    if(unlocked)card.onclick=()=>startPattern(p);
+    grid.appendChild(card);
+  });
+  document.getElementById('selectScreen').classList.remove('hidden');
+}
+function hideAll(){
+  ['startScreen','selectScreen','resultScreen','gameArea'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el.classList)el.classList.add('hidden');
+    if(id==='gameArea')el.style.display='none';
+  });
 }
 
-function drawEmptyCup() {
-  const ctx = cupCtx;
-  ctx.clearRect(0, 0, cupSize, cupSize);
-  
-  // Cup shadow
-  ctx.save();
-  ctx.beginPath();
-  ctx.ellipse(cupCx, cupCy + cupRadius * 0.05, cupRadius * 0.95, cupRadius * 0.95, 0, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(0,0,0,0.3)';
-  ctx.filter = 'blur(15px)';
-  ctx.fill();
-  ctx.restore();
-  
-  // Coffee base (dark brown circle)
-  ctx.beginPath();
-  ctx.arc(cupCx, cupCy, cupRadius * 0.88, 0, Math.PI * 2);
-  ctx.fillStyle = '#2c1810';
-  ctx.fill();
-  
-  // Coffee surface with crema gradient
-  const grad = ctx.createRadialGradient(cupCx, cupCy, 0, cupCx, cupCy, cupRadius * 0.88);
-  grad.addColorStop(0, '#5a3222');
-  grad.addColorStop(0.6, '#4a2818');
-  grad.addColorStop(1, '#3a1e10');
-  ctx.beginPath();
-  ctx.arc(cupCx, cupCy, cupRadius * 0.86, 0, Math.PI * 2);
-  ctx.fillStyle = grad;
-  ctx.fill();
-  
-  // Cup rim
-  ctx.beginPath();
-  ctx.arc(cupCx, cupCy, cupRadius * 0.92, 0, Math.PI * 2);
-  ctx.strokeStyle = '#d4c4b0';
-  ctx.lineWidth = cupRadius * 0.08;
-  ctx.stroke();
-  
-  // Inner rim highlight
-  ctx.beginPath();
-  ctx.arc(cupCx, cupCy, cupRadius * 0.88, 0, Math.PI * 2);
-  ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-  ctx.lineWidth = 1;
-  ctx.stroke();
+// ====== INIT CUP ======
+function initCup(){
+  const c=document.getElementById('cupCanvas');
+  const g=document.getElementById('guideCanvas');
+  cupCtx=c.getContext('2d');guideCtx=g.getContext('2d');
+  const vw=window.innerWidth,vh=window.innerHeight;
+  cupSize=Math.min(vw*.85,vh*.5,380);
+  cupR=cupSize/2;cupCx=cupR;cupCy=cupR;
+  c.width=c.height=g.width=g.height=cupSize;
+  drawCup();
+}
+function drawCup(){
+  const ctx=cupCtx;ctx.clearRect(0,0,cupSize,cupSize);
+  // Shadow
+  ctx.save();ctx.beginPath();ctx.ellipse(cupCx,cupCy+cupR*.05,cupR*.95,cupR*.95,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(0,0,0,.3)';ctx.filter='blur(15px)';ctx.fill();ctx.restore();
+  // Coffee
+  const grad=ctx.createRadialGradient(cupCx,cupCy,0,cupCx,cupCy,cupR*.88);
+  grad.addColorStop(0,'#5a3222');grad.addColorStop(.6,'#4a2818');grad.addColorStop(1,'#3a1e10');
+  ctx.beginPath();ctx.arc(cupCx,cupCy,cupR*.88,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
+  // Rim
+  ctx.beginPath();ctx.arc(cupCx,cupCy,cupR*.92,0,Math.PI*2);
+  ctx.strokeStyle='#d4c4b0';ctx.lineWidth=cupR*.08;ctx.stroke();
+  ctx.beginPath();ctx.arc(cupCx,cupCy,cupR*.88,0,Math.PI*2);
+  ctx.strokeStyle='rgba(255,255,255,.08)';ctx.lineWidth=1;ctx.stroke();
 }
 
-function drawGuide(pattern) {
-  guideCtx.clearRect(0, 0, cupSize, cupSize);
-  guideCtx.strokeStyle = 'rgba(255, 248, 230, 0.8)';
-  guideCtx.lineWidth = 2;
-  guideCtx.setLineDash([6, 6]);
-  pattern.draw(guideCtx, cupCx, cupCy, cupRadius * 0.75);
-  guideCtx.stroke();
-  guideCtx.setLineDash([]);
+// ====== GUIDE ======
+function drawGuide(pattern,opacity){
+  guideCtx.clearRect(0,0,cupSize,cupSize);
+  guideCtx.save();guideCtx.globalAlpha=opacity||.3;
+  guideCtx.strokeStyle='rgba(255,248,230,.8)';guideCtx.lineWidth=2;
+  guideCtx.setLineDash([5,5]);
+  pattern.buildGuide(guideCtx,cupCx,cupCy,cupR*.75);
+  guideCtx.stroke();guideCtx.restore();guideCtx.setLineDash([]);
 }
 
-// ============ DRAWING ============
-function getPos(e) {
-  const canvas = document.getElementById('cupCanvas');
-  const rect = canvas.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-  return {
-    x: clientX - rect.left,
-    y: clientY - rect.top
-  };
-}
-
-function isInCup(x, y) {
-  const dx = x - cupCx;
-  const dy = y - cupCy;
-  return Math.sqrt(dx * dx + dy * dy) < cupRadius * 0.85;
-}
-
-function startDraw(e) {
-  e.preventDefault();
-  const pos = getPos(e);
-  if (!isInCup(pos.x, pos.y)) return;
-  drawing = true;
-  shakePhase = 0;
-  pourPoints.push({ ...pos, tool: currentTool });
-  drawMilk(pos.x, pos.y, true);
-}
-
-function moveDraw(e) {
-  e.preventDefault();
-  if (!drawing) return;
-  const pos = getPos(e);
-  if (!isInCup(pos.x, pos.y)) return;
-  
-  let x = pos.x, y = pos.y;
-  
-  // Wiggle effect for shake tool
-  if (currentTool === 'shake') {
-    shakePhase += 0.4;
-    x += Math.sin(shakePhase) * 14;
+// ====== STEP ZONE HIGHLIGHT ======
+function showStepZone(step){
+  const g=document.getElementById('guideCanvas');
+  const gctx=guideCtx;
+  // Draw current pattern guide faintly
+  drawGuide(currentPattern,.15);
+  // Highlight active zone
+  if(!step.zone)return;
+  const z=step.zone;
+  const zx=z.cx*cupSize,zy=z.cy*cupSize,zr=z.r*cupSize;
+  gctx.save();
+  gctx.strokeStyle='rgba(244,208,63,.4)';gctx.lineWidth=2;gctx.setLineDash([4,4]);
+  if(z.isLine&&z.from&&z.to){
+    gctx.beginPath();
+    gctx.moveTo(z.from.x*cupSize,z.from.y*cupSize);
+    gctx.lineTo(z.to.x*cupSize,z.to.y*cupSize);
+    gctx.stroke();
+    // Arrow head
+    const ax=z.to.x*cupSize,ay=z.to.y*cupSize;
+    const angle=Math.atan2(z.to.y-z.from.y,z.to.x-z.from.x);
+    gctx.beginPath();gctx.moveTo(ax,ay);
+    gctx.lineTo(ax-10*Math.cos(angle-.4),ay-10*Math.sin(angle-.4));
+    gctx.lineTo(ax-10*Math.cos(angle+.4),ay-10*Math.sin(angle+.4));
+    gctx.closePath();gctx.fillStyle='rgba(244,208,63,.4)';gctx.fill();
+  } else {
+    gctx.beginPath();gctx.arc(zx,zy,zr,0,Math.PI*2);gctx.stroke();
+    gctx.fillStyle='rgba(244,208,63,.06)';gctx.fill();
   }
-  
-  pourPoints.push({ x, y, tool: currentTool });
-  drawMilk(x, y, false);
+  gctx.restore();gctx.setLineDash([]);
 }
 
-function endDraw(e) {
-  e.preventDefault();
-  drawing = false;
-}
-
-function drawMilk(x, y, isNew) {
-  const ctx = cupCtx;
+// Animated guide dot
+function startGuideAnimation(step){
+  stopGuideAnimation();
+  const arrow=document.getElementById('guideArrow');
+  if(!step.zone)return;
+  const canvas=document.getElementById('cupCanvas');
+  const rect=canvas.getBoundingClientRect();
+  const z=step.zone;
   
-  let size;
-  switch(currentTool) {
-    case 'pour': size = 14; break;
-    case 'drag': size = 4; break;
-    case 'thin': size = 6; break;
-    case 'shake': size = 16; break;
-    default: size = 12;
+  if(z.isLine&&z.from&&z.to){
+    let t=0;
+    arrow.style.display='block';
+    guideAnimTimer=setInterval(()=>{
+      t=(t+.008)%1;
+      const x=rect.left+(z.from.x+(z.to.x-z.from.x)*t)*cupSize-12;
+      const y=rect.top+(z.from.y+(z.to.y-z.from.y)*t)*cupSize-12;
+      arrow.style.left=x+'px';arrow.style.top=y+'px';
+    },30);
+  } else {
+    let t=0;
+    arrow.style.display='block';
+    guideAnimTimer=setInterval(()=>{
+      t+=.02;
+      const x=rect.left+z.cx*cupSize+Math.cos(t)*z.r*cupSize*.6-12;
+      const y=rect.top+z.cy*cupSize+Math.sin(t)*z.r*cupSize*.6-12;
+      arrow.style.left=x+'px';arrow.style.top=y+'px';
+    },30);
   }
+}
+function stopGuideAnimation(){
+  clearInterval(guideAnimTimer);
+  document.getElementById('guideArrow').style.display='none';
+}
+
+// ====== TOOLBAR ======
+function buildToolbar(steps){
+  const tb=document.getElementById('toolbar');tb.innerHTML='';
+  const toolsUsed=new Set(steps.map(s=>s.tool));
+  // Always include all tools but highlight recommended
+  Object.entries(TOOLS).forEach(([id,t])=>{
+    const btn=document.createElement('button');
+    btn.className='tool-btn'+(id===currentTool?' active':'');
+    btn.dataset.tool=id;
+    btn.innerHTML=`${t.emoji}<span class="tool-label">${t.label}</span>`;
+    btn.onclick=()=>{
+      document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');currentTool=id;
+    };
+    tb.appendChild(btn);
+  });
+}
+function highlightRecommendedTool(toolId){
+  document.querySelectorAll('.tool-btn').forEach(b=>{
+    b.classList.remove('recommended');
+    if(b.dataset.tool===toolId)b.classList.add('recommended');
+  });
+}
+
+// ====== STEP UI ======
+function updateStepUI(){
+  const step=currentPattern.steps[currentStep];
+  document.getElementById('stepTitle').textContent=step.title;
+  document.getElementById('stepDesc').textContent=step.desc;
+  document.getElementById('stepSub').textContent=step.sub;
+  document.getElementById('stepNum').textContent=currentStep+1;
+  document.getElementById('stepTotal').textContent=currentPattern.steps.length;
   
-  if (currentTool === 'drag') {
-    // Drag/etch: darker line that moves existing "milk"
-    ctx.beginPath();
-    ctx.arc(x, y, size, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(74, 40, 24, 0.4)';
-    ctx.fill();
-    // Fine brown line
-    if (pourPoints.length > 1) {
-      const prev = pourPoints[pourPoints.length - 2];
-      ctx.beginPath();
-      ctx.moveTo(prev.x, prev.y);
-      ctx.lineTo(x, y);
-      ctx.strokeStyle = 'rgba(58, 30, 16, 0.6)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
+  const dots=document.getElementById('stepDots');dots.innerHTML='';
+  currentPattern.steps.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='step-dot'+(i<currentStep?' done':'')+(i===currentStep?' active':'');
+    dots.appendChild(d);
+  });
+  
+  // Auto-select recommended tool
+  currentTool=step.tool;
+  document.querySelectorAll('.tool-btn').forEach(b=>{
+    b.classList.remove('active');
+    if(b.dataset.tool===currentTool)b.classList.add('active');
+  });
+  highlightRecommendedTool(step.tool);
+  showStepZone(step);
+  startGuideAnimation(step);
+}
+
+// ====== DRAWING ======
+function getPos(e){
+  const c=document.getElementById('cupCanvas');const rect=c.getBoundingClientRect();
+  const cx=e.touches?e.touches[0].clientX:e.clientX;
+  const cy=e.touches?e.touches[0].clientY:e.clientY;
+  return{x:cx-rect.left,y:cy-rect.top};
+}
+function inCup(x,y){const dx=x-cupCx,dy=y-cupCy;return Math.sqrt(dx*dx+dy*dy)<cupR*.85}
+function startDraw(e){
+  e.preventDefault();const p=getPos(e);if(!inCup(p.x,p.y))return;
+  drawing=true;shakePhase=0;
+  pourPoints.push({...p,tool:currentTool,step:currentStep});
+  drawMilk(p.x,p.y,true);
+}
+function moveDraw(e){
+  e.preventDefault();if(!drawing)return;
+  const p=getPos(e);if(!inCup(p.x,p.y))return;
+  let x=p.x,y=p.y;
+  if(currentTool==='shake'){shakePhase+=.4;x+=Math.sin(shakePhase)*15;}
+  pourPoints.push({x,y,tool:currentTool,step:currentStep});
+  drawMilk(x,y,false);
+}
+function endDraw(e){e.preventDefault();drawing=false;}
+
+function drawMilk(x,y,isNew){
+  const ctx=cupCtx;const t=TOOLS[currentTool];
+  const sz=t.size;
+  
+  if(t.isDrag){
+    // Etch: brown line
+    ctx.beginPath();ctx.arc(x,y,sz+1,0,Math.PI*2);
+    ctx.fillStyle='rgba(74,40,24,.5)';ctx.fill();
+    if(pourPoints.length>1){
+      const prev=pourPoints[pourPoints.length-2];
+      ctx.beginPath();ctx.moveTo(prev.x,prev.y);ctx.lineTo(x,y);
+      ctx.strokeStyle='rgba(42,22,10,.8)';ctx.lineWidth=sz;ctx.lineCap='round';ctx.stroke();
     }
   } else {
-    // Milk pour
-    const milkColor = currentTool === 'thin' ? 
-      'rgba(255, 248, 235, 0.7)' : 'rgba(255, 248, 230, 0.85)';
-    
-    ctx.beginPath();
-    ctx.arc(x, y, size, 0, Math.PI * 2);
-    ctx.fillStyle = milkColor;
-    ctx.fill();
-    
-    // Connect to previous point for smooth line
-    if (pourPoints.length > 1) {
-      const prev = pourPoints[pourPoints.length - 2];
-      ctx.beginPath();
-      ctx.moveTo(prev.x, prev.y);
-      ctx.lineTo(x, y);
-      ctx.strokeStyle = milkColor;
-      ctx.lineWidth = size * 2;
-      ctx.lineCap = 'round';
-      ctx.stroke();
+    ctx.beginPath();ctx.arc(x,y,sz,0,Math.PI*2);ctx.fillStyle=t.color;ctx.fill();
+    if(pourPoints.length>1){
+      const prev=pourPoints[pourPoints.length-2];
+      ctx.beginPath();ctx.moveTo(prev.x,prev.y);ctx.lineTo(x,y);
+      ctx.strokeStyle=t.color;ctx.lineWidth=sz*2;ctx.lineCap='round';ctx.stroke();
     }
-    
-    // Subtle shadow under milk
-    ctx.beginPath();
-    ctx.arc(x, y + 1, size * 0.8, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0,0,0,0.05)';
-    ctx.fill();
+    if(t.shadow){
+      ctx.beginPath();ctx.arc(x,y+1,sz*.7,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,0,0,.04)';ctx.fill();
+    }
   }
 }
 
-// ============ SCORING ============
-function calculateScore() {
-  if (pourPoints.length < 10) return { total: 0, coverage: 0, accuracy: 0, complexity: 0 };
+// ====== SCORING ======
+function calcScore(){
+  if(pourPoints.length<5)return{total:0,coverage:0,accuracy:0,smoothness:0};
+  const targetPts=currentPattern.getTargetPixels(cupCx,cupCy,cupR*.75);
   
-  const patternPts = currentPattern.getPoints(cupCx, cupCy, cupRadius * 0.75);
-  
-  // Coverage: how many pattern points are near a pour point
-  let covered = 0;
-  const threshold = cupRadius * 0.15;
-  patternPts.forEach(pp => {
-    const near = pourPoints.some(tp => {
-      const dx = tp.x - pp.x;
-      const dy = tp.y - pp.y;
-      return Math.sqrt(dx*dx + dy*dy) < threshold;
-    });
-    if (near) covered++;
+  const thresh=cupR*.16;
+  // Coverage
+  let covered=0;
+  targetPts.forEach(tp=>{
+    if(pourPoints.some(pp=>{const dx=pp.x-tp.x,dy=pp.y-tp.y;return Math.sqrt(dx*dx+dy*dy)<thresh}))covered++;
   });
-  const coverage = Math.min(100, (covered / patternPts.length) * 100);
+  const coverage=Math.min(100,covered/targetPts.length*100);
   
-  // Accuracy: how many pour points are near a pattern point (penalize wild strokes)
-  let accurate = 0;
-  const accThreshold = cupRadius * 0.2;
-  pourPoints.forEach(tp => {
-    const near = patternPts.some(pp => {
-      const dx = tp.x - pp.x;
-      const dy = tp.y - pp.y;
-      return Math.sqrt(dx*dx + dy*dy) < accThreshold;
-    });
-    if (near) accurate++;
+  // Accuracy
+  let accurate=0;const accT=cupR*.2;
+  pourPoints.forEach(pp=>{
+    if(targetPts.some(tp=>{const dx=pp.x-tp.x,dy=pp.y-tp.y;return Math.sqrt(dx*dx+dy*dy)<accT}))accurate++;
   });
-  const accuracy = Math.min(100, (accurate / pourPoints.length) * 100);
+  const accuracy=Math.min(100,accurate/pourPoints.length*100);
   
-  // Complexity bonus for harder patterns
-  const difficultyMultiplier = 1 + (currentPattern.difficulty - 1) * 0.2;
-  
-  // Smoothness: check if pour points form a smooth path
-  let smoothness = 100;
-  if (pourPoints.length > 3) {
-    let totalAngleChange = 0;
-    for (let i = 2; i < pourPoints.length; i++) {
-      const a1 = Math.atan2(pourPoints[i-1].y - pourPoints[i-2].y, pourPoints[i-1].x - pourPoints[i-2].x);
-      const a2 = Math.atan2(pourPoints[i].y - pourPoints[i-1].y, pourPoints[i].x - pourPoints[i-1].x);
-      let diff = Math.abs(a2 - a1);
-      if (diff > Math.PI) diff = Math.PI * 2 - diff;
-      totalAngleChange += diff;
+  // Smoothness
+  let smoothness=100;
+  if(pourPoints.length>3){
+    let totalAng=0;
+    for(let i=2;i<pourPoints.length;i++){
+      const a1=Math.atan2(pourPoints[i-1].y-pourPoints[i-2].y,pourPoints[i-1].x-pourPoints[i-2].x);
+      const a2=Math.atan2(pourPoints[i].y-pourPoints[i-1].y,pourPoints[i].x-pourPoints[i-1].x);
+      let d=Math.abs(a2-a1);if(d>Math.PI)d=Math.PI*2-d;totalAng+=d;
     }
-    const avgAngle = totalAngleChange / (pourPoints.length - 2);
-    smoothness = Math.max(0, 100 - avgAngle * 60);
+    smoothness=Math.max(0,100-totalAng/(pourPoints.length-2)*55);
   }
   
-  const total = Math.round(
-    (coverage * 0.4 + accuracy * 0.3 + smoothness * 0.3) * difficultyMultiplier
-  );
-  
-  return {
-    total: Math.min(100, total),
-    coverage: Math.round(coverage),
-    accuracy: Math.round(accuracy),
-    smoothness: Math.round(smoothness)
-  };
+  const diff=1+(currentPattern.difficulty-1)*.15;
+  const total=Math.min(100,Math.round((coverage*.4+accuracy*.3+smoothness*.3)*diff));
+  return{total,coverage:Math.round(coverage),accuracy:Math.round(accuracy),smoothness:Math.round(smoothness)};
 }
 
-// ============ DANIEL INTERRUPTIONS ============
-function spawnDaniel() {
-  if (!drawing && Math.random() > 0.4) return;
-  
-  const popup = document.createElement('div');
-  popup.className = 'daniel-popup';
-  
-  const positions = [
-    { top: '15%', left: '5%' },
-    { top: '15%', right: '5%' },
-    { bottom: '25%', left: '5%' },
-    { bottom: '25%', right: '5%' },
-    { top: '40%', left: '2%' },
-    { top: '40%', right: '2%' },
-  ];
-  const pos = positions[Math.floor(Math.random() * positions.length)];
-  Object.entries(pos).forEach(([k,v]) => popup.style[k] = v);
-  
-  const comments = [
-    "Is that supposed to be art?! 🤨", "My coffee is getting COLD! ⏰",
-    "Hurry up already! 😤", "I've been waiting FOREVER!",
-    "That doesn't look right... 🧐", "Are you even trying?!",
-    "I could do better blindfolded!", "Less thinking, more pouring!",
-    "My patience has limits! 😡", "That's... interesting? 🤔",
-    "*judges silently* 👀", "The foam is dying! HURRY!",
-  ];
-  
-  popup.innerHTML = `
-    <img src="daniel.jpg" alt="Daniel">
-    <div class="bubble">${comments[Math.floor(Math.random() * comments.length)]}</div>
-  `;
-  
-  document.body.appendChild(popup);
-  setTimeout(() => popup.remove(), 2200);
+// ====== DANIEL ======
+function spawnDaniel(){
+  const popup=document.createElement('div');popup.className='daniel-popup';
+  const positions=[{top:'15%',left:'3%'},{top:'15%',right:'3%'},{bottom:'28%',left:'3%'},{bottom:'28%',right:'3%'}];
+  const pos=positions[Math.floor(Math.random()*positions.length)];
+  Object.entries(pos).forEach(([k,v])=>popup.style[k]=v);
+  const msgs=["Is that supposed to be art?!","Hurry up! ⏰","That doesn't look right...","Are you even trying?!",
+    "*judges silently* 👀","The foam is dying!","Less thinking more pouring!","I could do better blindfolded!",
+    "My patience has limits! 😡","That's... interesting? 🤔","You're making me nervous! 😤","Wrong tool maybe? 🧐"];
+  popup.innerHTML=`<img src="daniel.jpg" alt="Daniel"><div class="bubble">${msgs[Math.floor(Math.random()*msgs.length)]}</div>`;
+  document.body.appendChild(popup);setTimeout(()=>popup.remove(),2500);
 }
 
-// ============ GAME FLOW ============
-function startGame() {
-  score = 0;
-  round = 0;
-  lives = 3;
-  streakCount = 0;
-  roundScores = [];
+// ====== GAME FLOW ======
+function startPattern(pattern){
+  currentPattern=pattern;currentStep=0;pourPoints=[];drawing=false;
+  hideAll();
+  document.getElementById('gameArea').style.display='block';
+  document.getElementById('hudLeft').textContent='☕ '+pattern.name;
+  document.getElementById('hudRight').textContent='⭐ '+totalStars;
   
-  document.getElementById('startScreen').classList.add('hidden');
-  document.getElementById('resultScreen').classList.add('hidden');
-  document.getElementById('finalScreen').classList.add('hidden');
-  document.getElementById('gameArea').style.display = 'block';
+  initCup();setupInput();
+  buildToolbar(pattern.steps);
   
-  initCup();
-  setupInput();
-  updateHUD();
-  nextRound();
+  // Splash
+  const sp=document.getElementById('levelSplash');
+  document.getElementById('splashIcon').textContent=pattern.icon;
+  document.getElementById('splashName').textContent=pattern.name;
+  document.getElementById('splashDiff').textContent='Difficulty: '+'⭐'.repeat(pattern.difficulty);
+  sp.classList.add('show');
+  setTimeout(()=>{sp.classList.remove('show');startStep();},1800);
 }
 
-function nextRound() {
-  if (round >= totalRounds || lives <= 0) {
-    showFinal();
-    return;
+function startStep(){
+  const step=currentPattern.steps[currentStep];
+  updateStepUI();
+  
+  // Timer for this step
+  maxTime=step.duration;timeLeft=maxTime;
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    timeLeft-=100;
+    document.getElementById('timerFill').style.width=Math.max(0,timeLeft/maxTime*100)+'%';
+    if(timeLeft<=0){clearInterval(timerInterval);advanceStep();}
+  },100);
+  
+  // Daniel
+  clearInterval(danielTimer);
+  danielTimer=setInterval(()=>{if(Math.random()<.25+currentPattern.difficulty*.08)spawnDaniel();},3000);
+}
+
+function advanceStep(){
+  stopGuideAnimation();
+  currentStep++;
+  if(currentStep>=currentPattern.steps.length){
+    finishPattern();
+  } else {
+    startStep();
+  }
+}
+
+function finishPattern(){
+  clearInterval(timerInterval);clearInterval(danielTimer);stopGuideAnimation();drawing=false;
+  
+  const result=calcScore();
+  let grade,emoji,cat;
+  if(result.total>=85){grade='MASTERPIECE';emoji='🏆';cat='perfect';}
+  else if(result.total>=60){grade='GREAT';emoji='⭐';cat='good';}
+  else if(result.total>=35){grade='DECENT';emoji='👍';cat='ok';}
+  else if(result.total>=15){grade='MEH';emoji='😐';cat='bad';}
+  else{grade='DISASTER';emoji='💀';cat='terrible';}
+  
+  // Save best
+  const prev=bestScores[currentPattern.id]||0;
+  if(result.total>prev){
+    bestScores[currentPattern.id]=result.total;
+    localStorage.setItem('dc_scores',JSON.stringify(bestScores));
+    totalStars=Object.values(bestScores).reduce((a,b)=>a+b,0);
   }
   
-  document.getElementById('resultScreen').classList.add('hidden');
-  document.getElementById('gameArea').style.display = 'block';
+  const comments=DANIEL_COMMENTS[cat];
+  document.getElementById('resultQuote').textContent='"'+comments[Math.floor(Math.random()*comments.length)]+'"';
+  document.getElementById('resultScore').textContent=result.total;
+  document.getElementById('resultGrade').textContent=emoji+' '+grade;
+  document.getElementById('resultBreakdown').innerHTML=
+    `📐 Coverage: ${result.coverage}%<br>🎯 Accuracy: ${result.accuracy}%<br>〰️ Smoothness: ${result.smoothness}%`+
+    (result.total>prev&&prev>0?`<br>🎉 New personal best!`:'');
   
-  round++;
-  pourPoints = [];
+  // Tip
+  const tips=TIPS[currentPattern.id];
+  if(result.total<70&&tips){
+    const tip=tips[Math.floor(Math.random()*tips.length)];
+    document.getElementById('resultTip').style.display='block';
+    document.getElementById('resultTip').innerHTML=`<strong>💡 Tip:</strong> ${tip}`;
+  } else {
+    document.getElementById('resultTip').style.display='none';
+  }
   
-  // Pick pattern based on round progression
-  let pool;
-  if (round <= 2) pool = PATTERNS.filter(p => p.difficulty <= 1);
-  else if (round <= 4) pool = PATTERNS.filter(p => p.difficulty <= 2);
-  else pool = PATTERNS;
+  // Compare: capture current cup as small canvas
+  const compareRow=document.getElementById('compareRow');
+  compareRow.innerHTML='';
+  // Your art
+  const yourC=document.createElement('canvas');yourC.width=yourC.height=90;
+  const yctx=yourC.getContext('2d');yctx.drawImage(document.getElementById('cupCanvas'),0,0,cupSize,cupSize,0,0,90,90);
+  const yourDiv=document.createElement('div');yourDiv.className='compare-item';
+  yourDiv.appendChild(yourC);yourDiv.innerHTML+='<div class="compare-label">Your Art</div>';
+  compareRow.appendChild(yourDiv);
+  // Target
+  const tarC=document.createElement('canvas');tarC.width=tarC.height=90;
+  const tctx=tarC.getContext('2d');
+  // Draw mini cup + guide
+  tctx.beginPath();tctx.arc(45,45,40,0,Math.PI*2);
+  const tg=tctx.createRadialGradient(45,45,0,45,45,40);
+  tg.addColorStop(0,'#5a3222');tg.addColorStop(1,'#3a1e10');
+  tctx.fillStyle=tg;tctx.fill();
+  tctx.strokeStyle='rgba(255,248,230,.8)';tctx.lineWidth=1.5;tctx.setLineDash([3,3]);
+  tctx.save();tctx.translate(45-cupCx*90/cupSize,45-cupCy*90/cupSize);tctx.scale(90/cupSize,90/cupSize);
+  currentPattern.buildGuide(tctx,cupCx,cupCy,cupR*.75);
+  tctx.restore();tctx.stroke();tctx.setLineDash([]);
+  const tarDiv=document.createElement('div');tarDiv.className='compare-item';
+  tarDiv.appendChild(tarC);tarDiv.innerHTML+='<div class="compare-label">Target</div>';
+  compareRow.appendChild(tarDiv);
   
-  // Avoid repeating the same pattern
-  let pick;
-  do {
-    pick = pool[Math.floor(Math.random() * pool.length)];
-  } while (pick === currentPattern && pool.length > 1);
-  currentPattern = pick;
-  
-  initCup();
-  drawGuide(currentPattern);
-  
-  // Show level card
-  const lc = document.getElementById('levelCard');
-  document.getElementById('levelNum').textContent = `Round ${round}`;
-  document.getElementById('levelName').textContent = currentPattern.name;
-  lc.classList.add('show');
-  setTimeout(() => lc.classList.remove('show'), 1500);
-  
-  document.getElementById('orderName').textContent = currentPattern.name;
-  document.getElementById('orderHint').textContent = currentPattern.hint;
-  document.getElementById('roundDisplay').textContent = round;
-  
-  // Timer
-  maxTime = (18 + currentPattern.timeBonus) * 1000;
-  // Less time in later rounds
-  maxTime -= round * 1000;
-  maxTime = Math.max(10000, maxTime);
-  timeLeft = maxTime;
-  
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    timeLeft -= 100;
-    document.getElementById('timerFill').style.width = 
-      Math.max(0, (timeLeft / maxTime) * 100) + '%';
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      finishRound();
-    }
-  }, 100);
-  
-  // Daniel interruptions
-  clearInterval(danielTimer);
-  danielTimer = setInterval(() => {
-    if (Math.random() < 0.35 + round * 0.05) spawnDaniel();
-  }, 2500 - round * 200);
-  
-  // Fade guide after a few seconds
-  setTimeout(() => {
-    document.getElementById('guideCanvas').style.transition = 'opacity 2s';
-    document.getElementById('guideCanvas').style.opacity = '0.08';
-  }, 3000 + (3 - currentPattern.difficulty) * 1000);
-  
-  // Reset guide opacity for next round
-  document.getElementById('guideCanvas').style.transition = 'none';
-  document.getElementById('guideCanvas').style.opacity = '0.25';
-  
-  updateHUD();
-}
-
-function finishRound() {
-  clearInterval(timerInterval);
-  clearInterval(danielTimer);
-  drawing = false;
-  
-  const result = calculateScore();
-  roundScores.push(result.total);
-  
-  // Determine grade
-  let grade, gradeEmoji, category;
-  if (result.total >= 85) { grade = 'MASTERPIECE'; gradeEmoji = '🏆'; category = 'perfect'; streakCount++; }
-  else if (result.total >= 65) { grade = 'GREAT'; gradeEmoji = '⭐'; category = 'good'; streakCount++; }
-  else if (result.total >= 45) { grade = 'DECENT'; gradeEmoji = '👍'; category = 'ok'; streakCount = 0; }
-  else if (result.total >= 25) { grade = 'MEH'; gradeEmoji = '😐'; category = 'bad'; streakCount = 0; lives--; }
-  else { grade = 'DISASTER'; gradeEmoji = '💀'; category = 'terrible'; streakCount = 0; lives--; }
-  
-  score += result.total;
-  
-  const comments = DANIEL_COMMENTS[category];
-  const quote = comments[Math.floor(Math.random() * comments.length)];
-  
-  document.getElementById('resultScore').textContent = result.total;
-  document.getElementById('resultGrade').textContent = `${gradeEmoji} ${grade}`;
-  document.getElementById('resultQuote').textContent = `"${quote}"`;
-  document.getElementById('resultBreakdown').innerHTML = 
-    `📐 Coverage: ${result.coverage}%<br>🎯 Accuracy: ${result.accuracy}%<br>〰️ Smoothness: ${result.smoothness}%` +
-    (streakCount >= 2 ? `<br>🔥 ${streakCount}x Streak Bonus!` : '') +
-    (lives < 3 ? `<br>❤️ Lives remaining: ${lives}` : '');
-  
-  if (streakCount >= 2) score += streakCount * 5;
-  
-  document.getElementById('scoreDisplay').textContent = score;
-  
-  // Show/hide buttons
-  document.getElementById('quitBtn').style.display = (round >= totalRounds || lives <= 0) ? 'none' : 'inline-block';
-  const nextBtn = document.querySelector('#resultScreen .btn-gold');
-  nextBtn.textContent = (round >= totalRounds || lives <= 0) ? 'SEE FINAL SCORE' : 'NEXT ORDER →';
-  nextBtn.onclick = (round >= totalRounds || lives <= 0) ? showFinal : nextRound;
-  
-  document.getElementById('gameArea').style.display = 'none';
+  document.getElementById('gameArea').style.display='none';
   document.getElementById('resultScreen').classList.remove('hidden');
-  
-  updateHUD();
 }
 
-function showFinal() {
-  document.getElementById('resultScreen').classList.add('hidden');
-  document.getElementById('gameArea').style.display = 'none';
-  
-  const avg = roundScores.length ? Math.round(roundScores.reduce((a,b) => a+b, 0) / roundScores.length) : 0;
-  
-  let title, msg;
-  if (avg >= 80) { title = '☕ LATTE ART LEGEND'; msg = "Daniel is speechless. For once."; }
-  else if (avg >= 60) { title = '☕ SOLID BARISTA'; msg = "Daniel grudgingly admits you're not terrible."; }
-  else if (avg >= 40) { title = '☕ NEEDS PRACTICE'; msg = "Daniel suggests you try a different career."; }
-  else { title = '☕ COFFEE CRIME SCENE'; msg = "Daniel has filed a formal complaint."; }
-  
-  document.getElementById('finalTitle').textContent = title;
-  document.getElementById('finalTotalScore').textContent = score;
-  document.getElementById('finalMsg').textContent = msg;
-  document.getElementById('finalBreakdown').innerHTML = 
-    `Rounds completed: ${roundScores.length}<br>` +
-    `Average score: ${avg}%<br>` +
-    roundScores.map((s, i) => `Round ${i+1}: ${s}%`).join('<br>');
-  
-  document.getElementById('finalScreen').classList.remove('hidden');
+function retryPattern(){
+  if(currentPattern)startPattern(currentPattern);
 }
 
-function updateHUD() {
-  document.getElementById('scoreDisplay').textContent = score;
-  document.getElementById('roundDisplay').textContent = round;
-  let hearts = '';
-  for (let i = 0; i < lives; i++) hearts += '❤️';
-  for (let i = lives; i < 3; i++) hearts += '🖤';
-  document.getElementById('livesDisplay').textContent = hearts;
+// ====== INPUT ======
+function setupInput(){
+  const c=document.getElementById('cupCanvas');
+  const nc=c.cloneNode(true);c.replaceWith(nc);
+  cupCtx=nc.getContext('2d');drawCup();
+  nc.addEventListener('mousedown',startDraw);
+  nc.addEventListener('mousemove',moveDraw);
+  nc.addEventListener('mouseup',endDraw);
+  nc.addEventListener('mouseleave',endDraw);
+  nc.addEventListener('touchstart',startDraw,{passive:false});
+  nc.addEventListener('touchmove',moveDraw,{passive:false});
+  nc.addEventListener('touchend',endDraw,{passive:false});
 }
 
-// ============ INPUT ============
-function setupInput() {
-  const canvas = document.getElementById('cupCanvas');
-  
-  // Remove old listeners
-  canvas.replaceWith(canvas.cloneNode(true));
-  const newCanvas = document.getElementById('cupCanvas');
-  cupCtx = newCanvas.getContext('2d');
-  
-  newCanvas.addEventListener('mousedown', startDraw);
-  newCanvas.addEventListener('mousemove', moveDraw);
-  newCanvas.addEventListener('mouseup', endDraw);
-  newCanvas.addEventListener('mouseleave', endDraw);
-  newCanvas.addEventListener('touchstart', startDraw, { passive: false });
-  newCanvas.addEventListener('touchmove', moveDraw, { passive: false });
-  newCanvas.addEventListener('touchend', endDraw, { passive: false });
-  
-  // Tool buttons
-  document.querySelectorAll('.tool-btn').forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentTool = btn.dataset.tool;
-    };
-  });
-}
-
-// Resize handler
-window.addEventListener('resize', () => {
-  if (document.getElementById('gameArea').style.display !== 'none') {
-    initCup();
-    if (currentPattern) drawGuide(currentPattern);
-  }
+window.addEventListener('resize',()=>{
+  if(document.getElementById('gameArea').style.display!=='none')initCup();
 });
 </script>
 </body>
